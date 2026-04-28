@@ -1,0 +1,1084 @@
+{
+  "login": {
+    "visibleText": "RECORD PRESS\n\nCOMMAND CENTER\nUSERNAME\nPASSWORD\nACCESS SYSTEM\nARCADIA, CA — PHEENIX ALPHA AD12"
+  },
+  "afterLoginUrl": "http://localhost:5000/#/",
+  "afterLoginText": "ONYX RECORD PRESS\nCommand Center\nJob Pipeline\nPress Control\nPress Log\nEnvironment\nFinancial\nMaintenance\nInventory\nShipping\nLead Tracker\nVendors\nSYSTEM STATUS\nQuickBooks\nMonday.com\nGmail\nSlack\nSensors\nFedEx\nUPS\nCOMMAND CENTER\nThu, Apr 23, 2026\n10:26:20 AM\nM\nMoe\nBoard / Production / Sales\nMONTHLY REVENUE\n$32,659\n-25.9%\nvs prior month\nCASH POSITION\n$15,400\nChecking + Savings\nACTIVE JOBS\n11\nAcross all",
+  "loginSuccess": true,
+  "dashboard": {
+    "url": "http://localhost:5000/#/",
+    "title": "",
+    "bodyText": "ONYX RECORD PRESS\nCommand Center\nJob Pipeline\nPress Control\nPress Log\nEnvironment\nFinancial\nMaintenance\nInventory\nShipping\nLead Tracker\nVendors\nSYSTEM STATUS\nQuickBooks\nMonday.com\nGmail\nSlack\nSensors\nFedEx\nUPS\nCOMMAND CENTER\nThu, Apr 23, 2026\n10:26:23 AM\nM\nMoe\nBoard / Production / Sales\nMONTHLY REVENUE\n$32,659\n-25.9%\nvs prior month\nCASH POSITION\n$15,400\nChecking + Savings\nACTIVE JOBS\n11\nAcross all stages\nPRESS UTILIZATION\n67%\nAD12 Alpha\nREJECT RATE\n3.2%\nTarget: < 5%\nRevenue vs COGS\nSep\nOct\nNov\nDec\nJan\nFeb\n$0k\n$15k\n$30k\n$45k\n$60k\nRevenue\nCOGS\nAR Aging\n$22,067.85\nCurrent\n$18,561.26\n84.1%\n1-30 Days\n$1,488.05\n6.7%\n91+ Days\n$2,018.54\n9.1%\nIra Altwegg $2,019 — 91+ days outstanding\nCash Flow Forecast (15-Day)\nMar 16\nMar 19\nMar 22\nMar 25\nMar 28\n$-8k\n$-4k\n$0k\n$4k\n$8k\nJob Profitability\nBartlett\n22.4%\nBornstien\n30.7%\nVan Orden\n17.5%\nKanebell\n31.1%\nPuscifer\n34.4%\nMoon Stmpr\n12.8%\n>25%\n15-25%\n<15%\nPipeline by Status\n$0k\n$8k\n$16k\n$24k\n$32k\nIntake\nPrepress\nReady\nProduction\nQC/Pack\nShipped\nOnyx Record Press — Arcadia, CA — Pheenix Alpha AD12\nCreated with Perplexity Computer\nIntake",
+    "buttons": [
+      "M\nMoe\nBoard / Production / Sales"
+    ],
+    "selects": [],
+    "tables": []
+  },
+  "pipeline": {
+    "url": "http://localhost:5000/#/pipeline",
+    "title": "Job Pipeline",
+    "bodyText": "ONYX RECORD PRESS\nCommand Center\nJob Pipeline\nPress Control\nPress Log\nEnvironment\nFinancial\nMaintenance\nInventory\nShipping\nLead Tracker\nVendors\nSYSTEM STATUS\nQuickBooks\nMonday.com\nGmail\nSlack\nSensors\nFedEx\nUPS\nCOMMAND CENTER\nThu, Apr 23, 2026\n10:26:27 AM\nM\nMoe\nBoard / Production / Sales\nJob Pipeline\nAll Formats\n7\"\n10\"\n12\"\nAll Locations\nOnyx\nBelu (Outsourced)\nBelu at Onyx\n2 jobs ready to press\n— Materials + Payment gates cleared\nINTAKE\n2\nONX-2026-009\nNo Deposit\nRobbie Waldman\n12\"\n·\n180g\n·\nOrange Marble\n250 units\nOnyx\nONX-2026-012\nNo Deposit\nDave Cooley\n10\"\n·\n180g\n·\nBlack\n100 units\nOnyx\n♻ Regrind: 0%\nPREPRESS\n3\nONX-2026-006\n75% Paid\nSkanking Forces\n7\"\n·\n140g\n·\nBlack\n500 units\nOnyx\n♻ Regrind: 25%\nONX-2026-007\n100% Paid\nEben Eldridge\n12\"\n·\n180g\n·\nBone White\n300 units\nOnyx\nONX-2026-011\n75% Paid\nIration Music\n12\"\n·\n180g\n·\nSea Green\n2,000 units\nOnyx\nREADY TO PRESS\n2\nONX-2026-005\n75% Paid\nInsomniac Music Group\n12\"\n·\n180g\n·\nGalaxy Blue\n750 units\nOnyx\nONX-2026-010\n100% Paid\nMoon Stomper Records\n12\"\n·\n180g\n·\nBlack\n500 units\nOnyx\n♻ Regrind: 25%\nIN PRODUCTION\n1\nONX-2026-003\n75% Paid\nPuscifer Entertainment\n12\"\n·\n180g\n·\nClear w/ Red Splatter\n1,000 units\nOnyx\nQC\n1\nONX-2026-004\n100% Paid\nKanebell Enterprises\n12\"\n·\n140g\n·\nBlack\n200 units\nOnyx\n♻ Regrind: 50%\nPACKAGING\n1\nONX-2026-008\n100% Paid\nScott Van Orden\n12\"\n·\n140g\n·\nBlack\n200 units\nOnyx\n♻ Regrind: 50%\nSHIPPED\n1\nONX-2026-002\n100% Paid\nCarrington Bornstien\n12\"\n·\n180g\n·\nBlack\n300 units\nOnyx\n♻ Regrind: 0%\nDELIVERED\n1\nONX-2026-001\n100% Paid\nAdam Bartlett\n12\"\n·\n180g\n·\nBlack\n500 units\nOnyx\n♻ Regrind: 25%\nOnyx Record Press — Arcadia, CA — Pheenix Alpha AD12\nCreated with Perplexity Computer\nIntake",
+    "buttons": [
+      "M\nMoe\nBoard / Production / Sales"
+    ],
+    "selects": [
+      {
+        "id": "format-filter",
+        "options": [
+          "all",
+          "7\"",
+          "10\"",
+          "12\""
+        ]
+      },
+      {
+        "id": "location-filter",
+        "options": [
+          "all",
+          "onyx",
+          "belu-outsourced",
+          "belu-at-onyx"
+        ]
+      }
+    ],
+    "tables": []
+  },
+  "production": {
+    "url": "http://localhost:5000/#/production",
+    "title": "Press Control — Pheenix Alpha AD12",
+    "bodyText": "ONYX RECORD PRESS\nCommand Center\nJob Pipeline\nPress Control\nPress Log\nEnvironment\nFinancial\nMaintenance\nInventory\nShipping\nLead Tracker\nVendors\nSYSTEM STATUS\nQuickBooks\nMonday.com\nGmail\nSlack\nSensors\nFedEx\nUPS\nCOMMAND CENTER\nThu, Apr 23, 2026\n10:26:30 AM\nM\nMoe\nBoard / Production / Sales\nPress Control — Pheenix Alpha AD12\nCURRENT JOB\nIN PRODUCTION\nJob ID\nONX-2026-003\nClient\nPuscifer Entertainment\nFormat\n12\" / 180g / Clear w/ Red Splatter\nPRESS PARAMETERS\nRule-Based\nH1 Heating\n3s\nH2 Heating\n6.5s\nCooling\n9s\nOpening Delay\n1s\nRam Pressure\n175 bar\nRam Pos Heat Stop\n99 mm\nSteam Pressure\n65 PSI\nHydraulic Pressure\n2200 PSI\nCake Weight\n182g\nEXTRUDER TEMPS\n135°\nBottom\n135°\nMiddle\n135°\nTop\n125°\nNozzle\nExt. Time: 4.2s·Regrind: N/A (color vinyl)\nLIVE MONITORING\nRUNNING\n847\nof 1,000 target\n138\nunits/hr\n12\nrejects (1.4%)\n8h 49m\nelapsed\n72.4°F\nAmbient Temp\nNOMINAL\n44%\nHumidity\nNOMINAL\n54°F\nChiller In\nNOMINAL\n62°F\nChiller Out\nNOMINAL\n118°F\nHydraulic Oil\nNOMINAL\n8h 49m\nRun Time\nNOMINAL\nToday's Production Schedule\n07:00\n08:00\n09:00\n10:00\n11:00\n12:00\n13:00\n14:00\n15:00\n16:00\n17:00\n18:00\n19:00\n20:00\n21:00\n22:00\n23:00\nONX-2026-003 — Puscifer Entertainment84.7%\nONX-2026-005 — Insomniac Music Group\nOnyx Record Press — Arcadia, CA — Pheenix Alpha AD12\nCreated with Perplexity Computer\nIntake",
+    "buttons": [
+      "M\nMoe\nBoard / Production / Sales"
+    ],
+    "selects": [],
+    "tables": []
+  },
+  "pressLog": {
+    "url": "http://localhost:5000/#/press-log",
+    "title": "Press Shift Log",
+    "bodyText": "ONYX RECORD PRESS\nCommand Center\nJob Pipeline\nPress Control\nPress Log\nEnvironment\nFinancial\nMaintenance\nInventory\nShipping\nLead Tracker\nVendors\nSYSTEM STATUS\nQuickBooks\nMonday.com\nGmail\nSlack\nSensors\nFedEx\nUPS\nCOMMAND CENTER\nThu, Apr 23, 2026\n10:26:34 AM\nM\nMoe\nBoard / Production / Sales\nPress Shift Log\n\nPheenix Alpha AD12 — Daily Field Logs\n\nNew Shift\nActive ShiftONX-2026-003 — Puscifer Entertainment — Started 8:00 AM\n847 good\n12 rejects\nTOTAL GOOD\n2,425\nTOTAL REJECTS\n45\nAVG YIELD\n97.6%\nTOTAL CYCLES\n2,485\nDOWNTIME\n1h 32m\nSHIFT HISTORY (6 LOGS)\nMar 15, 2026\n8:00 AM – LIVE\nONX-2026-003\nPuscifer Entertainment\n12\" · 180g\nClear w/ Red Splatter\n847\nGOOD\n12\nREJECT\n864\nCYCLES\n98.0%\nMar 14, 2026\n7:30 AM – 4:00 PM\nONX-2026-003\nPuscifer Entertainment\n12\" · 180g\nClear w/ Red Splatter\n520\nGOOD\n8\nREJECT\n528\nCYCLES\n98.5%\nMar 13, 2026\n7:30 AM – 5:00 PM\nONX-2026-003\nPuscifer Entertainment\n12\" · 180g\nClear w/ Red Splatter\n480\nGOOD\n15\nREJECT\n500\nCYCLES\n96.0%\nMar 10, 2026\n7:30 AM – 3:00 PM\nONX-2026-004\nKanebell Enterprises\n12\" · 140g\nBlack\n208\nGOOD\n5\nREJECT\n216\nCYCLES\n96.3%\nMar 8, 2026\n8:00 AM – 2:30 PM\nONX-2026-008\nScott Van Orden\n12\" · 140g\nBlack\n205\nGOOD\n3\nREJECT\n210\nCYCLES\n97.6%\nMar 6, 2026\n8:00 AM – 12:30 PM\nONX-2026-001\nAdam Bartlett\n12\" · 180g\nBlack\n165\nGOOD\n2\nREJECT\n167\nCYCLES\n98.8%\nOnyx Record Press — Arcadia, CA — Pheenix Alpha AD12\nCreated with Perplexity Computer\nIntake",
+    "buttons": [
+      "M\nMoe\nBoard / Production / Sales",
+      "New Shift",
+      "Mar 15, 2026\n8:00 AM – LIVE\nONX-2026-003\nPuscifer Entertainment\n12\" · 180g\nClear w/ Red Splatter\n847\nGOOD\n12\nREJECT\n864\nCYCLES\n98.0%",
+      "Mar 14, 2026\n7:30 AM – 4:00 PM\nONX-2026-003\nPuscifer Entertainment\n12\" · 180g\nClear w/ Red Splatter\n520\nGOOD\n8\nREJECT\n528\nCYCLES\n98.5%",
+      "Mar 13, 2026\n7:30 AM – 5:00 PM\nONX-2026-003\nPuscifer Entertainment\n12\" · 180g\nClear w/ Red Splatter\n480\nGOOD\n15\nREJECT\n500\nCYCLES\n96.0%",
+      "Mar 10, 2026\n7:30 AM – 3:00 PM\nONX-2026-004\nKanebell Enterprises\n12\" · 140g\nBlack\n208\nGOOD\n5\nREJECT\n216\nCYCLES\n96.3%",
+      "Mar 8, 2026\n8:00 AM – 2:30 PM\nONX-2026-008\nScott Van Orden\n12\" · 140g\nBlack\n205\nGOOD\n3\nREJECT\n210\nCYCLES\n97.6%",
+      "Mar 6, 2026\n8:00 AM – 12:30 PM\nONX-2026-001\nAdam Bartlett\n12\" · 180g\nBlack\n165\nGOOD\n2\nREJECT\n167\nCYCLES\n98.8%"
+    ],
+    "selects": [],
+    "tables": []
+  },
+  "environment": {
+    "url": "http://localhost:5000/#/environment",
+    "title": "Environmental Monitoring",
+    "bodyText": "ONYX RECORD PRESS\nCommand Center\nJob Pipeline\nPress Control\nPress Log\nEnvironment\nFinancial\nMaintenance\nInventory\nShipping\nLead Tracker\nVendors\nSYSTEM STATUS\nQuickBooks\nMonday.com\nGmail\nSlack\nSensors\nFedEx\nUPS\nCOMMAND CENTER\nThu, Apr 23, 2026\n10:26:37 AM\nM\nMoe\nBoard / Production / Sales\nEnvironmental Monitoring\nSensor Network — Recommended Setup\nVaisala HMT331 × 2\nAmbient temp & humidity — one near press, one at storage\nInline Water Temp × 2\nChiller loop — inlet & outlet monitoring\nAD12 Built-in Sensor\nHydraulic oil temp — read from control panel / Beckhoff PLC\nAmbient Temp\nNOMINAL\n74.0°F\nMin\n70.5\nMax\n74.1\nAvg\n72.4\nThreshold: 65–85 °F\nHumidity\nNOMINAL\n46.7%\nMin\n40.0\nMax\n47.6\nAvg\n44.0\nThreshold: 40–55 %\nChiller Inlet\nNOMINAL\n55.0°F\nMin\n52.2\nMax\n55.8\nAvg\n54.1\nThreshold: 50–58 °F\nChiller Outlet\nNOMINAL\n63.3°F\nMin\n60.5\nMax\n63.7\nAvg\n62.2\nThreshold: 58–66 °F\nHydraulic Oil\nWATCH\n119.4°F\nMin\n114.3\nMax\n122.8\nAvg\n118.5\nThreshold: < 122 °F\nSteam Pressure\nNOMINAL\n67.4PSI\nMin\n62.1\nMax\n67.8\nAvg\n65.0\nThreshold: 55–75 PSI\nHistorical Data\n24hr\n7day\n30day\n04:49 PM\n08:49 PM\n12:49 AM\n04:49 AM\n08:49 AM\n12:49 PM\n0\n35\n70\n105\n140\nAmbient\nHumidity\nChiller In\nHydraulic Oil\nOnyx Record Press — Arcadia, CA — Pheenix Alpha AD12\nCreated with Perplexity Computer\n140",
+    "buttons": [
+      "M\nMoe\nBoard / Production / Sales",
+      "24hr",
+      "7day",
+      "30day"
+    ],
+    "selects": [],
+    "tables": []
+  },
+  "finance": {
+    "url": "http://localhost:5000/#/finance",
+    "title": "Financial Overview",
+    "bodyText": "ONYX RECORD PRESS\nCommand Center\nJob Pipeline\nPress Control\nPress Log\nEnvironment\nFinancial\nMaintenance\nInventory\nShipping\nLead Tracker\nVendors\nSYSTEM STATUS\nQuickBooks\nMonday.com\nGmail\nSlack\nSensors\nFedEx\nUPS\nCOMMAND CENTER\nThu, Apr 23, 2026\n10:26:41 AM\nM\nMoe\nBoard / Production / Sales\nFinancial Overview\nJanuary 2026\nREVENUE\n$32,659\n25.9%\nCOGS\n$31,652\nGROSS PROFIT\n$1,007\n3.1% margin\nOPERATING EXP\n$8,430\nNET INCOME\n($7,423)\nProfit & Loss\nBalance Sheet\nMonthly Trends\nMonthly P&L — January 2026\nREVENUE\nPressing Revenue\n$32,659\nCOST OF GOODS SOLD\nVinyl Pellets\n($4,822)\nLabels\n($2,393)\nJackets & Inserts\n($3,200)\nMastering / Cutting\n($3,239)\nIC Labor (Pressing)\n($5,099)\nPlating (RTI)\n($4,800)\nUtilities\n($3,847)\nShipping Materials\n($1,252)\nOther COGS\n($3,000)\nOPERATING EXPENSES\nRent\n($6,150)\nInsurance\n($680)\nSoftware/Subscriptions\n($350)\nProfessional Services\n($750)\nOther OpEx\n($500)\nGross Profit\n$1,007\nNet Income\n($7,423)\nCash Position\nChecking Account\n$8,470\nSavings Account\n$6,160\nCC Available\n($12,770)\nNet Cash\n$15,400\nAR / AP Summary\nTotal AR\n$22,068\nTotal AP\n$9,200\nNet AR-AP\n$12,868\nJob Profitability\nJOB\tCLIENT\tREVENUE\tMATERIALS\tOVERHEAD\tTOTAL COGS\tMARGIN %\tMARGIN $\nONX-2026-001\tAdam Bartlett\t$5,284\t$4,100\t$581\t$4,681\t11.4%\t$603\nONX-2026-002\tCarrington Bornstien\t$5,266\t$3,650\t$581\t$4,231\t19.7%\t$1,035\nAccounts Receivable\nAdam Bartlett\ncurrent\n$5,284\nCarrington Bornstien\ncurrent\n$5,266\nPuscifer Entertainment\ncurrent\n$1,502\nInsomniac Music Group\ncurrent\n$1,695\nEben Eldridge\ncurrent\n$1,299\nScott Van Orden\ncurrent\n$1,031\nRobbie Waldman\ncurrent\n$855\nMoon Stomper Records\ncurrent\n$825\nDave Cooley\ncurrent\n$805\nKanebell Enterprises\n1-30\n$1,594\nSkanking Forces\n1-30\n($106)\nIra Altwegg\n91+\n$2,019\nTotal AR\n$22,068\nAccounts Payable\nRTI Plating\n$4,800\nLabel Printer\n$1,200\nJacket Supplier\n$1,800\nPLC Consulting\n$1,247\nSoCal Gas\n$450\nTotal AP\n$9,497\nOnyx Record Press — Arcadia, CA — Pheenix Alpha AD12\nCreated with Perplexity Computer\n140",
+    "buttons": [
+      "M\nMoe\nBoard / Production / Sales",
+      "Profit & Loss",
+      "Balance Sheet",
+      "Monthly Trends"
+    ],
+    "selects": [],
+    "tables": [
+      {
+        "headers": [
+          "JOB",
+          "CLIENT",
+          "REVENUE",
+          "MATERIALS",
+          "OVERHEAD",
+          "TOTAL COGS",
+          "MARGIN %",
+          "MARGIN $"
+        ],
+        "firstRow": [
+          "ONX-2026-001",
+          "Adam Bartlett",
+          "$5,284",
+          "$4,100",
+          "$581",
+          "$4,681",
+          "11.4%",
+          "$603"
+        ]
+      }
+    ]
+  },
+  "maintenance": {
+    "url": "http://localhost:5000/#/maintenance",
+    "title": "AD12 Maintenance",
+    "bodyText": "ONYX RECORD PRESS\nCommand Center\nJob Pipeline\nPress Control\nPress Log\nEnvironment\nFinancial\nMaintenance\nInventory\nShipping\nLead Tracker\nVendors\nSYSTEM STATUS\nQuickBooks\nMonday.com\nGmail\nSlack\nSensors\nFedEx\nUPS\nCOMMAND CENTER\nThu, Apr 23, 2026\n10:26:44 AM\nM\nMoe\nBoard / Production / Sales\nAD12 Maintenance\n1 overdue\n9 due soon\nMaintenance Schedule\nTASK\nFREQUENCY\nASSIGNED TO\nLAST COMPLETED\nNEXT DUE\nSTATUS\nNOTES\nDaily Safety Inspection\nDaily\nBilly\n2026-03-15\n2026-03-16\nOn Track\nPer Pheenix Section 3: safety switches, hatches, EMS test\nHydraulic Oil Level Check\nWeekly\nBilly\n2026-03-10\n2026-03-17\nOn Track\n—\nCompressed Air System Check\nWeekly\nBilly\n2026-03-10\n2026-03-17\nOn Track\n—\nTrimmer Knife Inspection\nWeekly\nBilly\n2026-03-10\n2026-03-17\nOn Track\n—\nLabel Magazine Alignment\nWeekly\nBilly\n2026-03-03\n2026-03-17\nDue Soon\nCheck alignment and spring tension\nHydraulic Oil Analysis\nMonthly\nMoe\n2026-02-15\n2026-03-15\nDue Soon\nVisual inspection and sample\nCake Form Sensor Calibration\nMonthly\nMoe\n2026-02-15\n2026-03-15\nDue Soon\n—\nSteam Hose Inspection\nMonthly\nMoe\n2026-02-15\n2026-03-15\nDue Soon\n—\nWater Loop Inspection\nMonthly\nMoe\n2026-01-20\n2026-02-20\nOverdue\nAll Temps assessment scheduled 3/16\nMould Surface Inspection\nMonthly\nBilly\n2026-02-15\n2026-03-15\nDue Soon\n—\nFull Safety System Audit\nQuarterly\nExternal\n2025-12-15\n2026-03-15\nDue Soon\nPheenix training week covers this\nHydraulic Filter Change\nQuarterly\nExternal\n2025-12-15\n2026-03-15\nDue Soon\n—\nExtruder Heater Element Check\nQuarterly\nExternal\n2025-12-15\n2026-03-15\nDue Soon\n—\nFull Press Calibration\nQuarterly\nExternal\n2025-12-15\n2026-03-15\nDue Soon\nScheduled for Pheenix training week\nComplete Annual Overhaul\nAnnual\nPheenix Alpha AB\n2025-06-01\n2026-06-01\nOn Track\nFactory service — coordinate with Scotty\nCritical Spare Parts Inventory\n7 critical items unstocked\nPART\tSTOCK\tREORDER AT\tVENDOR\tSTATUS\nHydraulic Seals\t0 sets\t1 sets\tPheenix Alpha AB\tCRITICAL — NOT STOCKED\nMould Heaters\t0 units\t2 units\tPheenix Alpha AB\tCRITICAL — NOT STOCKED\nTemperature Sensors\t0 units\t2 units\tPheenix Alpha AB\tCRITICAL — NOT STOCKED\nExtruder Screw Tip\t0 units\t1 units\tPheenix Alpha AB\tCRITICAL — NOT STOCKED\nTrimmer Knife Blades\t1 sets\t2 sets\tPheenix Alpha AB\tLOW\nLabel Magazine Springs\t2 units\t2 units\tPheenix Alpha AB\tLOW\nHydraulic Pump Seal Kit\t0 kits\t1 kits\tPheenix Alpha AB\tCRITICAL — NOT STOCKED\nSteam Valve Assembly\t0 units\t1 units\tPheenix Alpha AB\tCRITICAL — NOT STOCKED\nDampers (Press)\t0 units\t2 units\tPheenix Alpha AB\tCRITICAL — NOT STOCKED\nRecent Maintenance Log\n2026-03-15\nBilly\nDaily safety inspection — all systems nominal\nDaily\n2026-03-14\nBilly\nDaily safety inspection — noted slight steam hose wear\nDaily\n2026-03-10\nBilly\nWeekly hydraulic oil level check — level normal\nWeekly\n2026-03-10\nBilly\nTrimmer knife inspection — blade still sharp\nWeekly\n2026-03-10\nMoe\nCompressed air system check — filters clean\nWeekly\n2026-02-15\nMoe\nMonthly hydraulic oil visual inspection — clear, no particulate\nMonthly\n2026-02-15\nExternal\nCake form sensor calibrati",
+    "buttons": [
+      "M\nMoe\nBoard / Production / Sales"
+    ],
+    "selects": [],
+    "tables": [
+      {
+        "headers": [
+          "PART",
+          "STOCK",
+          "REORDER AT",
+          "VENDOR",
+          "STATUS"
+        ],
+        "firstRow": [
+          "Hydraulic Seals",
+          "0 sets",
+          "1 sets",
+          "Pheenix Alpha AB",
+          "CRITICAL — NOT STOCKED"
+        ]
+      }
+    ]
+  },
+  "inventory": {
+    "url": "http://localhost:5000/#/inventory",
+    "title": "Inventory & Purchasing",
+    "bodyText": "ONYX RECORD PRESS\nCommand Center\nJob Pipeline\nPress Control\nPress Log\nEnvironment\nFinancial\nMaintenance\nInventory\nShipping\nLead Tracker\nVendors\nSYSTEM STATUS\nQuickBooks\nMonday.com\nGmail\nSlack\nSensors\nFedEx\nUPS\nCOMMAND CENTER\nThu, Apr 23, 2026\n10:26:48 AM\nM\nMoe\nBoard / Production / Sales\nInventory & Purchasing\n2 items below threshold\nOK\nBlack Virgin PVC\n1,200lbs\nReorder at: 500 lbs\nOK\nBlack Regrind PVC\n340lbs\nReorder at: 200 lbs\nLOW\nColor PVC (Various)\n180lbs\nReorder at: 100 lbs\nLOW\nLabels (Blank Stock)\n4,200units\nReorder at: 5,000 units\nOK\nJackets (Standard)\n850units\nReorder at: 500 units\nOK\nInner Sleeves\n2,100units\nReorder at: 2,000 units\nOK\nShrinkwrap\n12rolls\nReorder at: 2 rolls\nPurchase Orders\nPO #\tVENDOR\tITEMS\tAMOUNT\tDATE\tSTATUS\nPO-2026-042\tVinyl Supply Co.\tBlack Virgin PVC — 500 lbs\t$2,400\t2026-02-28\treceived\nPO-2026-043\tPrint Masters\tCustom Labels — Puscifer Ent.\t$1,200\t2026-03-08\tin-transit\nPO-2026-044\tJacket World\tGatefold Jackets — 300 units\t$1,800\t2026-03-12\tordered\nPO-2026-045\tVinyl Supply Co.\tColor PVC (Clear + Red) — 200 lbs\t$1,600\t2026-03-10\tin-transit\nPO-2026-046\tSleeve Supply\tInner Sleeves — 2000 units\t$320\t2026-02-10\treceived\nVendor Directory\nRTI (Record Technology Inc.)\nPlating\nStandard ordering\nLead: 2-3 weeks\nPheenix Alpha AB\nAD12 Parts & Service\nScotty — Remote Support\nLead: 3-4 weeks (Sweden)\nAll Temps\nWater Loop / Chiller\nService call\nLead: 1-2 days\nPLC Consulting\nSafety Valves / Boiler\nLouis\nLead: 1-2 weeks\nVinyl Supply Co.\nVirgin & Color PVC\nTBD\nLead: 1-2 weeks\nPrint Masters\nLabels\nTBD\nLead: 1-2 weeks\nOnyx Record Press — Arcadia, CA — Pheenix Alpha AD12\nCreated with Perplexity Computer\n140",
+    "buttons": [
+      "M\nMoe\nBoard / Production / Sales"
+    ],
+    "selects": [],
+    "tables": [
+      {
+        "headers": [
+          "PO #",
+          "VENDOR",
+          "ITEMS",
+          "AMOUNT",
+          "DATE",
+          "STATUS"
+        ],
+        "firstRow": [
+          "PO-2026-042",
+          "Vinyl Supply Co.",
+          "Black Virgin PVC — 500 lbs",
+          "$2,400",
+          "2026-02-28",
+          "received"
+        ]
+      }
+    ]
+  },
+  "shipping": {
+    "url": "http://localhost:5000/#/shipping",
+    "title": "Shipping & Tracking",
+    "bodyText": "ONYX RECORD PRESS\nCommand Center\nJob Pipeline\nPress Control\nPress Log\nEnvironment\nFinancial\nMaintenance\nInventory\nShipping\nLead Tracker\nVendors\nSYSTEM STATUS\nQuickBooks\nMonday.com\nGmail\nSlack\nSensors\nFedEx\nUPS\nCOMMAND CENTER\nThu, Apr 23, 2026\n10:26:52 AM\nM\nMoe\nBoard / Production / Sales\nShipping & Tracking\nACTIVE SHIPMENTS\n2\nIN TRANSIT\n1\nDELIVERED THIS MONTH\n1\nAVG TRANSIT TIME\n2.8days\nActive Shipments\n1 in transit\nCARRIER\tTRACKING #\tJOB\tREFERENCE\tRECIPIENT\tSTATUS\tSHIP DATE\tEST. DELIVERY\tPKGS / WEIGHT\t\nFEDEX\t\n796102999012\n\tONX-2026-002\tCB-LP1 Final Run\tCarrington Bornstien\tIn Transit\tMar 14\tMar 18\t3 / 110 lbs\t\n\nUPS\t\n1Z999AA10123456784\n\tONX-2026-008\tSVO-004 Final Run\tScott Van Orden\tLabel Created\tMar 18\tMar 23\t2 / 68 lbs\t\nDelivery History\n4 delivered\nCARRIER\tTRACKING #\tJOB\tREFERENCE\tRECIPIENT\tSTATUS\tSHIP DATE\tEST. DELIVERY\tPKGS / WEIGHT\t\nFEDEX\t\n796102998765\n\tONX-2026-001\tABR-001 Final Run\tAdam Bartlett\tDelivered\tJan 27\tJan 31\t4 / 145 lbs\t\n\nFEDEX\t\n796102994421\n\tONX-2026-001\tABR-001 TPs\tAdam Bartlett\tDelivered\tJan 9\tJan 12\t1 / 8 lbs\t\n\nFEDEX\t\n796102995533\n\tONX-2026-002\tCB-LP1 TPs\tCarrington Bornstien\tDelivered\tFeb 4\tFeb 8\t1 / 6 lbs\t\n\nUPS\t\n1Z999AA10123456785\n\tONX-2026-004\tKNB-007 TPs\tKanebell Enterprises\tDelivered\tMar 1\tMar 4\t1 / 5 lbs\t\nShipments by Job\nONX-2026-001\nAdam Bartlett\nDelivered\n796102998765\nFinal Run\nDelivered\n796102994421\nTPs\nDelivered\nONX-2026-002\nCarrington Bornstien\nLabel Created\n796102999012\nFinal Run\nIn Transit\n796102995533\nTPs\nDelivered\nONX-2026-008\nScott Van Orden\nLabel Created\n1Z999AA10123456784\nFinal Run\nLabel Created\nONX-2026-004\nKanebell Enterprises\nLabel Created\n1Z999AA10123456785\nTPs\nDelivered\nCarrier Summary\nFedEx\nconnected\nAccount\nRecordMadness\nShipments\n4\nTotal Spend\n$463.75\nUPS\nconnected\nShipments\n2\nTotal Spend\n$109.25\nOnyx Record Press — Arcadia, CA — Pheenix Alpha AD12\nCreated with Perplexity Computer\n140",
+    "buttons": [
+      "M\nMoe\nBoard / Production / Sales"
+    ],
+    "selects": [],
+    "tables": [
+      {
+        "headers": [
+          "CARRIER",
+          "TRACKING #",
+          "JOB",
+          "REFERENCE",
+          "RECIPIENT",
+          "STATUS",
+          "SHIP DATE",
+          "EST. DELIVERY",
+          "PKGS / WEIGHT",
+          ""
+        ],
+        "firstRow": [
+          "FEDEX",
+          "796102999012",
+          "ONX-2026-002",
+          "CB-LP1 Final Run",
+          "Carrington Bornstien",
+          "In Transit",
+          "Mar 14",
+          "Mar 18",
+          "3 / 110 lbs",
+          ""
+        ]
+      },
+      {
+        "headers": [
+          "CARRIER",
+          "TRACKING #",
+          "JOB",
+          "REFERENCE",
+          "RECIPIENT",
+          "STATUS",
+          "SHIP DATE",
+          "EST. DELIVERY",
+          "PKGS / WEIGHT",
+          ""
+        ],
+        "firstRow": [
+          "FEDEX",
+          "796102998765",
+          "ONX-2026-001",
+          "ABR-001 Final Run",
+          "Adam Bartlett",
+          "Delivered",
+          "Jan 27",
+          "Jan 31",
+          "4 / 145 lbs",
+          ""
+        ]
+      }
+    ]
+  },
+  "leads": {
+    "url": "http://localhost:5000/#/leads",
+    "title": "Lead Tracker",
+    "bodyText": "ONYX RECORD PRESS\nCommand Center\nJob Pipeline\nPress Control\nPress Log\nEnvironment\nFinancial\nMaintenance\nInventory\nShipping\nLead Tracker\nVendors\nSYSTEM STATUS\nQuickBooks\nMonday.com\nGmail\nSlack\nSensors\nFedEx\nUPS\nCOMMAND CENTER\nThu, Apr 23, 2026\n10:26:55 AM\nM\nMoe\nBoard / Production / Sales\nLead Tracker\n\nMoe's CRM — vinyl sales pipeline\n\nNew Lead\nTOTAL LEADS\n36\nPIPELINE VALUE\n$181,300\nActive leads\nHOT LEADS\n9\nOVERDUE FOLLOW-UPS\n27\nWON / CLOSED\n7\nNew Lead\n2\nContacted\n10\nQuoting\n10\nNegotiating\n5\nWon\n5\nRepeat Client\n2\nLost\n2\nAll Sources\nCold Call\nReferral\nWebsite\nInstagram\nTrade Show\nWord of Mouth\nReturning\nAll Priorities\nHot\nNormal\nLow\n36 leads shown\nCONTACT\nSTATUS\nSOURCE\nFOLLOW UP\n▲\nVALUE\nLAST CONTACT\nN\nNaika\nTrio ADV\nNEW LEAD\n📸\nInstagram\nMar 18, 2026\nOVERDUE\n—\nJan 31, 2026\n81d ago\nT\nTommy Simpson\nMacro Micro\nQUOTING\n🌐\nWebsite\nMar 18, 2026\nOVERDUE\n$8,500\nJan 9, 2026\n103d ago\nS\nShannon Lay\nShannonlaymusic@gmail.com\nCONTACTED\n💬\nWord of Mouth\nMar 18, 2026\nOVERDUE\n$4,000\nNov 14, 2025\n159d ago\nG\nGavin Gamboa\ngavin.gamboa@gmail.com\nQUOTING\n📞\nCold Call\nMar 18, 2026\nOVERDUE\n$9,000\nNov 6, 2025\n167d ago\nJ\nJayson\nScarlet Moon\nNEGOTIATING\n📞\nCold Call\nMar 18, 2026\nOVERDUE\n$15,000\nSep 14, 2025\n220d ago\nB\nBryan Scary\nbryanscary@gmail.com\nNEGOTIATING\n🌐\nWebsite\nMar 18, 2026\nOVERDUE\n$10,000\nOct 19, 2025\n185d ago\nC\nCarrington Bornstien\nREPEAT CLIENT\n🌐\nWebsite\nMar 19, 2026\nOVERDUE\n$5,800\nMar 4, 2026\n49d ago\nD\nDavid Celia\nF-Spot Records\nNEGOTIATING\n🔄\nReturning\nMar 19, 2026\nOVERDUE\n$4,500\nFeb 27, 2026\n54d ago\nM\nMatt Miller\nTXDXE\nQUOTING\n🌐\nWebsite\nMar 19, 2026\nOVERDUE\n$3,500\nJan 28, 2026\n84d ago\nA\nAuragraph\nauragraphh@gmail.com\nQUOTING\n🌐\nWebsite\nMar 19, 2026\nOVERDUE\n$5,500\nJan 9, 2026\n103d ago\nL\nLowleaf\nlowleaf@gmail.com\nNEGOTIATING\n🌐\nWebsite\nMar 19, 2026\nOVERDUE\n$4,000\nOct 14, 2025\n190d ago\nS\nSamantha\nPrajin Parlay\nCONTACTED\n🌐\nWebsite\nMar 19, 2026\nOVERDUE\n—\nJan 9, 2026\n103d ago\nK\nKimmi Bitter\nkimmibitter@gmail.com\nQUOTING\n🌐\nWebsite\nMar 21, 2026\nOVERDUE\n$6,000\nJan 14, 2026\n98d ago\nB\nBrett\nbamcstarr@gmail.com\nNEW LEAD\n🌐\nWebsite\nMar 21, 2026\nOVERDUE\n$1,800\nJan 19, 2026\n93d ago\nJ\nJohnathan Snipes\ndbombarc@gmail.com\nCONTACTED\n📞\nCold Call\nMar 21, 2026\nOVERDUE\n—\nDec 14, 2025\n129d ago\nJ\nJesse Draxler\njessedraxler@gmail.com\nQUOTING\n🌐\nWebsite\nMar 21, 2026\nOVERDUE\n$8,500\nJan 19, 2026\n93d ago\nT\nTash\nI Like Alice\nQUOTING\n🤝\nReferral\nMar 21, 2026\nOVERDUE\n$7,000\nSep 30, 2025\n204d ago\nR\nRoc Nation\nRoc Nation\nNEGOTIATING\n📞\nCold Call\nMar 21, 2026\nOVERDUE\n$25,000\nJun 26, 2025\n300d ago\nE\nEric Joseph Carlson\nericjosephcarlson@gmail.com\nQUOTING\n🌐\nWebsite\nMar 21, 2026\nOVERDUE\n$9,500\nOct 14, 2025\n190d ago\nF\nFredwreck\nfredwreckla@hotmail.com\nCONTACTED\n📞\nCold Call\nMar 21, 2026\nOVERDUE\n$5,000\nNov 6, 2025\n167d ago\nD\nDJ Holland Aze\ndjhollandaze@gmail.com\nQUOTING\n🌐\nWebsite\nMar 21, 2026\nOVERDUE\n$3,000\nDec 9, 2025\n134d ago\nP\nPuscifer Entertainment\nPuscifer Entertainment\nWON\n🤝\nReferral\nMar 24, 2026\nOVERDUE\n$12,500\nMar 14, 2026\n39d ago\nS\nSignal\nNew Palm Club\nCONTACTED\n🌐\nWebsite\nMar 24",
+    "buttons": [
+      "M\nMoe\nBoard / Production / Sales",
+      "New Lead",
+      "New Lead\n2",
+      "Contacted\n10",
+      "Quoting\n10",
+      "Negotiating\n5",
+      "Won\n5",
+      "Repeat Client\n2",
+      "Lost\n2",
+      "CONTACT",
+      "STATUS",
+      "SOURCE",
+      "FOLLOW UP\n▲",
+      "VALUE",
+      "LAST CONTACT"
+    ],
+    "selects": [
+      {
+        "id": "source-filter",
+        "options": [
+          "all",
+          "cold-call",
+          "referral",
+          "website",
+          "instagram",
+          "trade-show",
+          "word-of-mouth",
+          "returning"
+        ]
+      },
+      {
+        "id": "priority-filter",
+        "options": [
+          "all",
+          "hot",
+          "normal",
+          "low"
+        ]
+      }
+    ],
+    "tables": []
+  },
+  "vendors": {
+    "url": "http://localhost:5000/#/vendors",
+    "title": "Vendor Directory",
+    "bodyText": "ONYX RECORD PRESS\nCommand Center\nJob Pipeline\nPress Control\nPress Log\nEnvironment\nFinancial\nMaintenance\nInventory\nShipping\nLead Tracker\nVendors\nSYSTEM STATUS\nQuickBooks\nMonday.com\nGmail\nSlack\nSensors\nFedEx\nUPS\nCOMMAND CENTER\nThu, Apr 23, 2026\n10:26:59 AM\nM\nMoe\nBoard / Production / Sales\nVendor Directory\n\nSuppliers, service providers & partners\n\nTOTAL VENDORS\n14\nACTIVE\n14\nTOTAL SPEND YTD\n$87,247\nCATEGORIES\n8\nAll\n14\nPlating\n1\nMaterials\n3\nMastering\n2\nPackaging\n1\nEquipment\n2\nUtilities\n2\nLogistics\n2\nConsulting\n1\nAll Statuses\nActive\nInactive\nOn Hold\n14 vendors shown\nVENDOR\n▲\nCATEGORY\nCONTACT\nSPEND YTD\nLAST ORDER\nRATING\nAmerican Chiller Services\nACTIVE\nNET 30\nEQUIPMENT\nTony Martinez\n(818) 555-0633\n$3,200\nJan 31, 2026\nArcher Plastics\nACTIVE\nNET 15\nMATERIALS\nJeff Kim\n(323) 555-0147\n$9,800\nFeb 27, 2026\nBelu Media Group\nACTIVE\nNET 30\nMATERIALS\nBelu Team\n(323) 555-0277\n$5,400\nFeb 14, 2026\nDave's Mastering\nACTIVE\nCOD\nMASTERING\nDave McNair\n(434) 555-0312\n$9,700\nMar 7, 2026\nFedEx\nACTIVE\nNET 15\nLOGISTICS\nAcct Manager\n(800) 463-3339\n$4,800\nMar 14, 2026\nInfrasonic Mastering\nACTIVE\nCOD\nMASTERING\nPete Lyman\n(615) 555-0198\n$3,200\nJan 19, 2026\nPacific Label Co.\nACTIVE\nNET 30\nMATERIALS\nMichelle Tran\n(626) 555-0389\n$7,100\nMar 4, 2026\nPheenix Alpha AB\nACTIVE\nNET 60\nEQUIPMENT\nSales Dept\n+46 8 555 123 45\n$0\nSep 14, 2025\nPLC Controls & Consulting\nACTIVE\nNET 30\nCONSULTING\nGary Chen\n(626) 555-0445\n$1,247\nJan 14, 2026\nRTI (Record Technology Inc.)\nACTIVE\nNET 30\nPLATING\nDon MacInnis\n(805) 484-2747\n$14,400\nMar 9, 2026\nSCE (So. Cal Edison)\nACTIVE\nNET 15\nUTILITIES\nCommercial Acct\n(800) 655-4555\n$6,200\nFeb 28, 2026\nSoCal Gas Company\nACTIVE\nNET 15\nUTILITIES\nCommercial Acct\n(800) 427-2200\n$8,500\nFeb 28, 2026\nStoughton Printing\nACTIVE\nNET 30\nPACKAGING\nMark Stoughton\n(608) 555-0221\n$12,500\nFeb 19, 2026\nUPS\nACTIVE\nNET 15\nLOGISTICS\nAcct Manager\n(800) 742-5877\n$1,200\nFeb 9, 2026\nOnyx Record Press — Arcadia, CA — Pheenix Alpha AD12\nCreated with Perplexity Computer\n140",
+    "buttons": [
+      "M\nMoe\nBoard / Production / Sales",
+      "All\n14",
+      "Plating\n1",
+      "Materials\n3",
+      "Mastering\n2",
+      "Packaging\n1",
+      "Equipment\n2",
+      "Utilities\n2",
+      "Logistics\n2",
+      "Consulting\n1",
+      "VENDOR\n▲",
+      "CATEGORY",
+      "SPEND YTD",
+      "LAST ORDER",
+      "RATING"
+    ],
+    "selects": [
+      {
+        "id": "status-filter",
+        "options": [
+          "all",
+          "active",
+          "inactive",
+          "on-hold"
+        ]
+      }
+    ],
+    "tables": []
+  },
+  "networkRequests": [
+    {
+      "method": "GET",
+      "url": "http://localhost:5000/api/dashboard-summary"
+    },
+    {
+      "method": "GET",
+      "url": "http://localhost:5000/api/jobs"
+    },
+    {
+      "method": "GET",
+      "url": "http://localhost:5000/api/shipments"
+    },
+    {
+      "method": "GET",
+      "url": "http://localhost:5000/api/production-runs"
+    },
+    {
+      "method": "GET",
+      "url": "http://localhost:5000/api/ar-aging"
+    },
+    {
+      "method": "GET",
+      "url": "http://localhost:5000/api/press-logs"
+    },
+    {
+      "method": "GET",
+      "url": "http://localhost:5000/api/sensors"
+    },
+    {
+      "method": "GET",
+      "url": "http://localhost:5000/api/financials"
+    },
+    {
+      "method": "GET",
+      "url": "http://localhost:5000/api/maintenance"
+    },
+    {
+      "method": "GET",
+      "url": "http://localhost:5000/api/inventory"
+    },
+    {
+      "method": "GET",
+      "url": "http://localhost:5000/api/leads"
+    },
+    {
+      "method": "GET",
+      "url": "http://localhost:5000/api/vendors"
+    }
+  ],
+  "apiResponseSamples": {
+    "/api/dashboard-summary": {
+      "revenue": 32659,
+      "prevRevenue": 44100,
+      "cashPosition": 15400,
+      "activeJobCount": 11,
+      "pressUtilization": 67,
+      "rejectRate": 3.2,
+      "financials": [
+        {
+          "period": "2025-10",
+          "revenue": 41200,
+          "cogs": 29800,
+          "operatingExpenses": 12400,
+          "netIncome": -1000,
+          "cashPosition": 18500,
+          "arTotal": 19200,
+          "apTotal": 8400,
+          "id": 13
+        },
+        {
+          "period": "2025-11",
+          "revenue": 38700,
+          "cogs": 28100,
+          "operatingExpenses": 11800,
+          "netIncome": -1200,
+          "cashPosition": 16800,
+          "arTotal": 17800,
+          "apTotal": 7600,
+          "id": 14
+        },
+        {
+          "period": "2025-12",
+          "revenue": 44100,
+          "cogs": 31200,
+          "operatingExpenses": 12100,
+          "netIncome": 800,
+          "cashPosition": 17200,
+          "arTotal": 20100,
+          "apTotal": 8100,
+          "id": 15
+        },
+        {
+          "period": "2026-01",
+          "revenue": 32659,
+          "cogs": 31652,
+          "operatingExpenses": 8430,
+          "netIncome": -7422,
+          "cashPosition": 15400,
+          "arTotal": 22068,
+          "apTotal": 9200,
+          "id": 16
+        },
+        {
+          "period": "2026-02",
+          "revenue": 28400,
+          "cogs": 24800,
+          "operatingExpenses": 8200,
+          "netIncome": -4600,
+          "cashPosition": 13100,
+          "arTotal": 21500,
+          "apTotal": 8800,
+          "id": 17
+        },
+        {
+          "period": "2026-03",
+          "revenue": 10528,
+          "cogs": 8200,
+          "operatingExpenses": 8100,
+          "netIncome": -5772,
+          "cashPosition": 14280,
+          "arTotal": 22068,
+          "apTotal": 9500,
+          "id": 18
+        }
+      ],
+      "arBuckets": {
+        "current": 18561.260000000002,
+        "1-30": 1488.05,
+        "31-60": 0,
+        "61-90": 0,
+        "91+": 2018.54
+      },
+      "arTotal": 22067.850000000002,
+      "jobs": [
+        {
+          "jobId": "ONX-2026-002",
+          "clientName": "Carrington Bornstien",
+          "catalogNumber": "CB-LP1",
+          "format": "12\"",
+          "weight": "180g",
+          "vinylColor": "Black",
+          "quantity": 300,
+          "status": "shipped",
+          "depositStatus": "100%",
+          "estimatedRevenue": 5800,
+          "actualRevenue": 5266,
+          "estimatedCogs": 3800,
+          "actualCogs": 3650,
+          "pressDate": "2026-02-10",
+          "shipDate": "2026-03-05",
+          "productionLocation": "onyx",
+          "regrindEligible": true,
+          "regrindRatio": "0%",
+          "operatorNotes": null,
+          "specialInstructions": "Handle with care — special gatefold",
+          "id": 2
+        },
+        {
+          "jobId": "ONX-2026-003",
+          "clientName": "Puscifer Entertainment",
+          "catalogNumber": "PUS-2026",
+          "format": "12\"",
+          "weight": "180g",
+          "vinylColor": "Clear w/ Red Splatter",
+          "quantity": 1000,
+          "status": "in-production",
+          "depositStatus": "75%",
+          "estimatedRevenue": 12500,
+          "actualRevenue": null,
+          "estimatedCogs": 8200,
+          "actualCogs": null,
+          "pressDate": "2026-03-15",
+          "shipDate": null,
+          "productionLocation": "onyx",
+          "regrindEligible": false,
+          "regrindRatio": "0%",
+          "operatorNotes": "Color match critical",
+          "specialInstructions": "Splatter pattern per client mockup. No regrind.",
+          "id": 3
+        },
+        {
+          "jobId": "ONX-2026-004",
+          "clientName": "Kanebell Enterprises",
+          "catalogNumber": "KNB-007",
+          "format": "12\"",
+          "weight": "140g",
+          "vinylColor": "Black",
+          "quantity": 200,
+          "status": "qc",
+          "depositStatus": "100%",
+          "estimatedRevenue": 3200,
+          "actualRevenue": null,
+          "estimatedCogs": 2100,
+          "actualCogs": 1950,
+          "pressDate": "2026-03-10",
+          "shipDate": null,
+          "productionLocation": "onyx",
+          "regrindEligible": true,
+          "regrindRatio": "50%",
+          "operatorNotes": "Regrind blend successful",
+          "specialInstructions": null,
+          "id": 4
+        },
+        {
+          "jobId": "ONX-2026-005",
+          "clientName": "Insomniac Music Group",
+          "catalogNumber": "INSOM-42",
+          "format": "12\"",
+          "weight": "180g",
+          "vinylColor": "Galaxy Blue",
+          "quantity": 750,
+          "status": "ready-to-press",
+          "depositStatus": "75%",
+          "estimatedRevenue": 9800,
+          "actualRevenue": null,
+          "estimatedCogs": 6500,
+          "actualCogs": null,
+          "pressDate": null,
+          "shipDate": null,
+          "productionLocation": "onyx",
+          "regrindEligible": false,
+          "regrindRatio": "0%",
+          "operatorNotes": null,
+          "specialInstructions": "Metallic labels. Handle with lint-free gloves.",
+          "id": 5
+        },
+        {
+          "jobId": "ONX-2026-006",
+          "clientName": "Skanking Forces",
+          "catalogNumber": "SKF-003",
+          "format": "7\"",
+          "weight": "140g",
+          "vinylColor": "Black",
+          "quantity": 500,
+          "status": "prepress",
+          "depositStatus": "75%",
+          "estimatedRevenue": 3500,
+          "actualRevenue": null,
+          "estimatedCogs": 2200,
+          "actualCogs": null,
+          "pressDate": null,
+          "shipDate": null,
+          "productionLocation": "onyx",
+          "regrindEligible": true,
+          "regrindRatio": "25%",
+          "operatorNotes": null,
+          "specialInstructions": null,
+          "id": 6
+        },
+        {
+          "jobId": "ONX-2026-007",
+          "clientName": "Eben Eldridge",
+          "catalogNumber": "EE-LP2",
+          "format": "12\"",
+          "weight": "180g",
+          "vinylColor": "Bone White",
+          "quantity": 300,
+          "status": "prepress",
+          "depositStatus": "100%",
+          "estimatedRevenue": 4200,
+          "actualRevenue": null,
+          "estimatedCogs": 2800,
+          "actualCogs": null,
+          "pressDate": null,
+          "shipDate": null,
+          "productionLocation": "onyx",
+          "regrindEligible": false,
+          "regrindRatio": "0%",
+          "operatorNotes": null,
+          "specialInstructions": "Audiophile grade — virgin vinyl only",
+          "id": 7
+        },
+        {
+          "jobId": "ONX-2026-008",
+          "clientName": "Scott Van Orden",
+          "catalogNumber": "SVO-004",
+          "format": "12\"",
+          "weight": "140g",
+          "vinylColor": "Black",
+          "quantity": 200,
+          "status": "packaging",
+          "depositStatus": "100%",
+          "estimatedRevenue": 2800,
+          "actualRevenue": null,
+          "estimatedCogs": 1800,
+          "actualCogs": 1750,
+          "pressDate": "2026-03-08",
+          "shipDate": null,
+          "productionLocation": "onyx",
+          "regrindEligible": true,
+          "regrindRatio": "50%",
+          "operatorNotes": "Good run",
+          "specialInstructions": null,
+          "id": 8
+        },
+        {
+          "jobId": "ONX-2026-009",
+          "clientName": "Robbie Waldman",
+          "catalogNumber": "RW-12",
+          "format": "12\"",
+          "weight": "180g",
+          "vinylColor": "Orange Marble",
+          "quantity": 250,
+          "status": "intake",
+          "depositStatus": "none",
+          "estimatedRevenue": 3800,
+          "actualRevenue": null,
+          "estimatedCogs": 2500,
+          "actualCogs": null,
+          "pressDate": null,
+          "shipDate": null,
+          "productionLocation": "onyx",
+          "regrindEligible": false,
+          "regrindRatio": "0%",
+          "operatorNotes": null,
+          "specialInstructions": "New client — needs pressing agreement",
+          "id": 9
+        },
+        {
+          "jobId": "ONX-2026-010",
+          "clientName": "Moon Stomper Records",
+          "catalogNumber": "MSR-018",
+          "format": "12\"",
+          "weight": "180g",
+          "vinylColor": "Black",
+          "quantity": 500,
+          "status": "ready-to-press",
+          "depositStatus": "100%",
+          "estimatedRevenue": 6000,
+          "actualRevenue": null,
+          "estimatedCogs": 3900,
+          "actualCogs": null,
+          "pressDate": null,
+          "shipDate": null,
+          "productionLocation": "onyx",
+          "regrindEligible": true,
+          "regrindRatio": "25%",
+          "operatorNotes": null,
+          "specialInstructions": null,
+          "id": 10
+        },
+        {
+          "jobId": "ONX-2026-011",
+          "clientName": "Iration Music",
+          "catalogNumber": "IRAT-LP5",
+          "format": "12\"",
+          "weight": "180g",
+          "vinylColor": "Sea Green",
+          "quantity": 2000,
+          "status": "prepress",
+          "depositStatus": "75%",
+          "estimatedRevenue": 24000,
+          "actualRevenue": null,
+          "estimatedCogs": 15500,
+          "actualCogs": null,
+          "pressDate": null,
+          "shipDate": null,
+          "productionLocation": "onyx",
+          "regrindEligible": false,
+          "regrindRatio": "0%",
+          "operatorNotes": null,
+          "specialInstructions": "Large run — may split across weeks. Deposit held.",
+          "id": 11
+        },
+        {
+          "jobId": "ONX-2026-012",
+          "clientName": "Dave Cooley",
+          "catalogNumber": "DC-MSTR01",
+          "format": "10\"",
+          "weight": "180g",
+          "vinylColor": "Black",
+          "quantity": 100,
+          "status": "intake",
+          "depositStatus": "none",
+          "estimatedRevenue": 1800,
+          "actualRevenue": null,
+          "estimatedCogs": 1200,
+          "actualCogs": null,
+          "pressDate": null,
+          "shipDate": null,
+          "productionLocation": "onyx",
+          "regrindEligible": true,
+          "regrindRatio": "0%",
+          "operatorNotes": null,
+          "specialInstructions": "Mastering included",
+          "id": 12
+        }
+      ]
+    },
+    "/api/jobs": {
+      "count": 12,
+      "sample": {
+        "jobId": "ONX-2026-001",
+        "clientName": "Adam Bartlett",
+        "catalogNumber": "ABR-001",
+        "format": "12\"",
+        "weight": "180g",
+        "vinylColor": "Black",
+        "quantity": 500,
+        "status": "delivered",
+        "depositStatus": "100%",
+        "estimatedRevenue": 6200,
+        "actualRevenue": 5284,
+        "estimatedCogs": 4200,
+        "actualCogs": 4100,
+        "pressDate": "2026-01-15",
+        "shipDate": "2026-02-01",
+        "productionLocation": "onyx",
+        "regrindEligible": true,
+        "regrindRatio": "25%",
+        "operatorNotes": "Clean run, good fill",
+        "specialInstructions": null,
+        "id": 1
+      }
+    },
+    "/api/shipments": {
+      "count": 6,
+      "sample": {
+        "jobId": "ONX-2026-001",
+        "carrier": "fedex",
+        "trackingNumber": "796102998765",
+        "service": "FedEx Ground",
+        "status": "delivered",
+        "yourReference": "ABR-001 Final Run",
+        "poNumber": null,
+        "invoiceNumber": null,
+        "departmentNumber": null,
+        "shipDate": "2026-01-28",
+        "estimatedDelivery": "2026-02-01",
+        "actualDelivery": "2026-02-01",
+        "recipientName": "Adam Bartlett",
+        "recipientCity": "Los Angeles",
+        "recipientState": "CA",
+        "weight": 145,
+        "packageCount": 4,
+        "shippingCost": 187.5,
+        "events": [
+          {
+            "timestamp": "2026-01-28T09:00:00",
+            "location": "Arcadia, CA",
+            "description": "Shipping label created",
+            "status": "label-created"
+          },
+          {
+            "timestamp": "2026-01-28T16:30:00",
+            "location": "Arcadia, CA",
+            "description": "Picked up",
+            "status": "picked-up"
+          },
+          {
+            "timestamp": "2026-01-29T06:15:00",
+            "location": "Los Angeles, CA",
+            "description": "Arrived at FedEx LA Hub",
+            "status": "in-transit"
+          },
+          {
+            "timestamp": "2026-01-30T03:40:00",
+            "location": "Compton, CA",
+            "description": "At FedEx Compton Sort Facility",
+            "status": "in-transit"
+          },
+          {
+            "timestamp": "2026-02-01T07:20:00",
+            "location": "Los Angeles, CA",
+            "description": "Out for delivery",
+            "status": "out-for-delivery"
+          },
+          {
+            "timestamp": "2026-02-01T14:45:00",
+            "location": "Los Angeles, CA",
+            "description": "Delivered — signed by A. BARTLETT",
+            "status": "delivered"
+          }
+        ],
+        "id": 353
+      }
+    },
+    "/api/production-runs": {
+      "count": 3,
+      "sample": {
+        "jobId": "ONX-2026-003",
+        "operatorName": "Billy",
+        "startTime": "2026-03-15T08:00:00",
+        "endTime": null,
+        "cycleCount": 847,
+        "rejectCount": 12,
+        "downtimeMinutes": 15,
+        "downtimeCauseCode": "DT-09",
+        "vinylUsageLbs": 320,
+        "ambientTemp": 72.4,
+        "humidity": 44,
+        "chillerTempIn": 54,
+        "chillerTempOut": 62,
+        "hydraulicOilTemp": 118,
+        "pressParameters": {
+          "heating1Time": 3,
+          "heating2Time": 6.5,
+          "coolingTime": 9,
+          "openingDelay": 1,
+          "extruderBottom": 135,
+          "extruderMiddle": 135,
+          "extruderTop": 135,
+          "extruderNozzle": 125,
+          "ramPressure": 175,
+          "ramPosHeatingStop": 99,
+          "extruderExtendedTime": 4.2,
+          "cakeWeight": 182,
+          "steamPressure": 65,
+          "hydraulicPressure": 2200
+        },
+        "qualityPass": true,
+        "notes": "Color splatter run — pattern consistency good. AD12 defaults + extended heat for clear/splatter.",
+        "id": 19
+      }
+    },
+    "/api/ar-aging": {
+      "count": 12,
+      "sample": {
+        "customerName": "Adam Bartlett",
+        "amount": 5284.14,
+        "agingBucket": "current",
+        "invoiceDate": "2026-02-20",
+        "invoiceNumber": "INV-3801",
+        "notes": "Largest current receivable",
+        "id": 341
+      }
+    },
+    "/api/press-logs": {
+      "count": 6,
+      "sample": {
+        "shiftDate": "2026-03-15",
+        "operatorName": "Press Op 1",
+        "shiftNumber": 1,
+        "pressStartTime": "08:00",
+        "pressStopTime": null,
+        "totalRuntimeMinutes": null,
+        "jobId": "ONX-2026-003",
+        "clientName": "Puscifer Entertainment",
+        "format": "12\"",
+        "weight": "180g",
+        "vinylColor": "Clear w/ Red Splatter",
+        "colorBlend": "80% clear / 20% red pellet mix, random splatter",
+        "regrindPercent": "0%",
+        "goodCount": 847,
+        "rejectCount": 12,
+        "testPressCount": 5,
+        "totalCycles": 864,
+        "extruderTemp": 335,
+        "mouldTempTop": 310,
+        "mouldTempBottom": 305,
+        "clampPressurePSI": 2200,
+        "clampTimeSec": 6.5,
+        "coolingTimeSec": 9,
+        "cycleTimeSec": 22.5,
+        "trimmerSetting": "Position 3 — standard 12\"",
+        "extruderRPM": 28,
+        "biscuitWeightGrams": 182,
+        "ambientTempF": 72.4,
+        "humidityPercent": 44,
+        "chillerTempIn": 54,
+        "chillerTempOut": 62,
+        "hydraulicOilTempF": 118,
+        "waterPressurePSI": 42,
+        "steamPressurePSI": 65,
+        "vinylUsedLbs": 320,
+        "regrindUsedLbs": 0,
+        "labelsUsed": 1720,
+        "stoppages": [
+          {
+            "time": "10:22",
+            "durationMin": 8,
+            "reason": "Label magazine jam — cleared and re-loaded",
+            "code": "DT-09"
+          },
+          {
+            "time": "14:15",
+            "durationMin": 5,
+            "reason": "Trimmer alignment check",
+            "code": "DT-07"
+          }
+        ],
+        "totalDowntimeMinutes": 13,
+        "rejectReasons": [
+          {
+            "reason": "Non-fill",
+            "count": 5
+          },
+          {
+            "reason": "Off-center label",
+            "count": 4
+          },
+          {
+            "reason": "Flash",
+            "count": 3
+          }
+        ],
+        "qualityNotes": "Splatter pattern looking consistent after first 50 cycles. Slight non-fill at startup — resolved after temp stabilized.",
+        "maintenanceFlags": [
+          {
+            "component": "Label Magazine",
+            "severity": "low",
+            "description": "Spring tension loosening — schedule check"
+          }
+        ],
+        "shiftNotes": "Running Puscifer clear/red splatter. Extended heat cycle for clear compound. Color pattern approved by Moe at 09:15. Steady run after initial startup adjustments.",
+        "nextShiftHandoff": "Press is warm and running. ~153 units remaining on this order. Labels pre-loaded for Side A/B.",
+        "stamperIdA": "PUS-2026-A-001",
+        "stamperIdB": "PUS-2026-B-001",
+        "stamperCondition": "good",
+        "id": 409
+      }
+    },
+    "/api/sensors": {
+      "count": 288,
+      "sample": {
+        "id": 37,
+        "timestamp": "2026-03-14T23:49:00.000Z",
+        "sensorType": "ambient-temp",
+        "value": 71.9,
+        "unit": "°F",
+        "location": "Press Area"
+      }
+    },
+    "/api/financials": {
+      "count": 6,
+      "sample": {
+        "period": "2025-10",
+        "revenue": 41200,
+        "cogs": 29800,
+        "operatingExpenses": 12400,
+        "netIncome": -1000,
+        "cashPosition": 18500,
+        "arTotal": 19200,
+        "apTotal": 8400,
+        "id": 13
+      }
+    },
+    "/api/maintenance": {
+      "count": 15,
+      "sample": {
+        "title": "Daily Safety Inspection",
+        "frequency": "daily",
+        "lastCompleted": "2026-03-15",
+        "nextDue": "2026-03-16",
+        "assignedTo": "Billy",
+        "status": "on-track",
+        "notes": "Per Pheenix Section 3: safety switches, hatches, EMS test",
+        "id": 22
+      }
+    },
+    "/api/inventory": {
+      "count": 16,
+      "sample": {
+        "itemName": "Black Virgin PVC",
+        "category": "vinyl",
+        "currentStock": 1200,
+        "unit": "lbs",
+        "reorderThreshold": 500,
+        "preferredVendor": "TBD",
+        "lastOrderDate": "2026-02-28",
+        "status": "ok",
+        "id": 325
+      }
+    },
+    "/api/leads": {
+      "count": 36,
+      "sample": {
+        "contactName": "Adam Bartlett",
+        "companyName": null,
+        "email": "adamleebartlett@gmail.com",
+        "phone": null,
+        "city": "Los Angeles",
+        "state": "CA",
+        "status": "repeat-client",
+        "source": "referral",
+        "referredBy": "Surachai",
+        "assignedTo": "Moe",
+        "priority": "normal",
+        "interestedFormat": "12\"",
+        "interestedQuantity": "500",
+        "interestedColor": "Black",
+        "interestedServices": "full-package",
+        "estimatedValue": 6200,
+        "createdDate": "2025-06-15",
+        "lastContactDate": "2026-02-01",
+        "nextFollowUp": null,
+        "closedDate": "2025-10-03",
+        "notes": "Lead from Surachai, stopped responding to emails sent last follow up 06/27. New message about discounts 10/03. Booked ONX-2026-001.",
+        "lastCommunication": "Job delivered 02/01 — signed by A. Bartlett",
+        "communicationLog": [
+          {
+            "date": "2025-06-15",
+            "type": "email",
+            "summary": "Initial outreach via Surachai intro"
+          },
+          {
+            "date": "2025-06-27",
+            "type": "email",
+            "summary": "Follow up — no response"
+          },
+          {
+            "date": "2025-10-03",
+            "type": "email",
+            "summary": "Sent message about discounts"
+          },
+          {
+            "date": "2025-10-15",
+            "type": "call",
+            "summary": "Confirmed job, 500 black 12\" 180g"
+          },
+          {
+            "date": "2026-02-01",
+            "type": "email",
+            "summary": "Job delivered, sent thank you"
+          }
+        ],
+        "linkedJobIds": "ONX-2026-001",
+        "websiteUrl": null,
+        "instagramHandle": null,
+        "tags": "band-direct,indie",
+        "id": 359
+      }
+    },
+    "/api/vendors": {
+      "count": 14,
+      "sample": {
+        "name": "RTI (Record Technology Inc.)",
+        "category": "plating",
+        "contactName": "Don MacInnis",
+        "contactEmail": "don@recordtech.com",
+        "contactPhone": "(805) 484-2747",
+        "website": "recordtech.com",
+        "address": "486 Dawson Dr, Camarillo, CA 93012",
+        "status": "active",
+        "paymentTerms": "net-30",
+        "accountNumber": "RTI-ORP-2024",
+        "notes": "Primary plating house. 3-day turnaround on stampers. Handles lacquer & DMM. Don is direct contact for rush orders.",
+        "productsServices": "Lacquer plating, stamper production, DMM cutting, quality inspection",
+        "lastOrderDate": "2026-03-10",
+        "totalSpendYTD": 14400,
+        "rating": 5,
+        "tags": "plating,critical,primary",
+        "id": 395
+      }
+    }
+  },
+  "uniqueApiEndpoints": [
+    "GET /api/dashboard-summary",
+    "GET /api/jobs",
+    "GET /api/shipments",
+    "GET /api/production-runs",
+    "GET /api/ar-aging",
+    "GET /api/press-logs",
+    "GET /api/sensors",
+    "GET /api/financials",
+    "GET /api/maintenance",
+    "GET /api/inventory",
+    "GET /api/leads",
+    "GET /api/vendors"
+  ]
+}
