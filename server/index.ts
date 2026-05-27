@@ -8,6 +8,10 @@ import { setupAuth } from "./auth";
 const app = express();
 const httpServer = createServer(app);
 
+// Confiar en el primer proxy (Supabase/Nginx/Railway) para que las cookies
+// `secure` funcionen detrás de TLS terminado en el proxy.
+app.set("trust proxy", 1);
+
 declare module "http" {
   interface IncomingMessage {
     rawBody: unknown;
