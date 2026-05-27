@@ -651,9 +651,20 @@ export default function Leads() {
           : data.reason || "Sin vencidos",
       });
     } catch (err: any) {
+      // apiRequest lanza Error con formato "<status>: <body>"; extraer el campo error si es JSON.
+      let msg = err?.message || "No se pudo enviar el digest";
+      const jsonStart = msg.indexOf("{");
+      if (jsonStart >= 0) {
+        try {
+          const parsed = JSON.parse(msg.slice(jsonStart));
+          if (parsed?.error) msg = parsed.error;
+        } catch {
+          // dejar msg como está si no parsea
+        }
+      }
       toast({
         title: "Error",
-        description: err?.message || "No se pudo enviar el digest",
+        description: msg,
         variant: "destructive",
       });
     } finally {
