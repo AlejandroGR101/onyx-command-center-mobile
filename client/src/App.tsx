@@ -58,7 +58,15 @@ function AppRouter() {
 }
 
 function AuthGate() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black text-white/40 text-xs tracking-widest uppercase">
+        Cargando…
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return <LoginPage />;
