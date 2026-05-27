@@ -4,9 +4,11 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import bcrypt from "bcryptjs";
 import connectPgSimple from "connect-pg-simple";
-import { pool } from "./db";
+import { pool, db } from "./db";
 import { storage } from "./storage";
 import type { User } from "@shared/schema";
+import { users } from "@shared/schema";
+import { eq } from "drizzle-orm";
 
 // Passport: validar usuario vs bcrypt hash
 passport.use(
@@ -29,10 +31,10 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id: number, done) => {
   try {
-    const { db } = await import("./db");
-    const { users } = await import("@shared/schema");
-    const { eq } = await import("drizzle-orm");
-    const r = await db.select().from(users).where(eq(users.id, id));
+    const r = await db
+      .select({ id: users.id, username: users.username, role: users.role })
+      .from(users)
+      .where(eq(users.id, id));
     done(null, r[0] || false);
   } catch (err) {
     done(err);
@@ -41,10 +43,16 @@ passport.deserializeUser(async (id: number, done) => {
 
 export function setupAuth(app: Express) {
   const PgSession = connectPgSimple(session);
+
+  const sessionSecret = process.env.SESSION_SECRET;
+  if (!sessionSecret && process.env.NODE_ENV === "production") {
+    throw new Error("SESSION_SECRET must be set in production");
+  }
+
   app.use(
     session({
       store: new PgSession({ pool, createTableIfMissing: true }),
-      secret: process.env.SESSION_SECRET || "dev-insecure-secret",
+      secret: sessionSecret || "dev-insecure-secret",
       resave: false,
       saveUninitialized: false,
       cookie: {
@@ -73,7 +81,8 @@ export function setupAuth(app: Express) {
   app.post("/api/auth/logout", (req, res, next) => {
     req.logout((err) => {
       if (err) return next(err);
-      req.session.destroy(() => {
+      req.session.destroy((destroyErr) => {
+        if (destroyErr) return next(destroyErr);
         res.clearCookie("connect.sid");
         res.json({ ok: true });
       });
