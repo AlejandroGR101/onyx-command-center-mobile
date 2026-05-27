@@ -1,11 +1,16 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { requireAuth } from "./auth";
 
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
+
+  // Proteger todas las rutas /api registradas a partir de aquí.
+  // Los endpoints /api/auth/* se montan en setupAuth (antes de registerRoutes) y NO pasan por requireAuth.
+  app.use("/api", requireAuth);
 
   // === JOBS ===
   app.get("/api/jobs", async (_req, res) => {
