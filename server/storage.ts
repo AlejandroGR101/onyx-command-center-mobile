@@ -12,7 +12,7 @@ import type {
   PressLog, InsertPressLog,
   User, InsertUser,
 } from "@shared/schema";
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { db } from "./db";
 import {
   jobs, productionRuns, financials, maintenanceTasks, sensorReadings,
@@ -1293,8 +1293,8 @@ export class DrizzleStorage implements IStorage {
   // Sensors
   async getSensorReadings(sensorType?: string, limit?: number): Promise<SensorReading[]> {
     const rows = sensorType
-      ? await db.select().from(sensorReadings).where(eq(sensorReadings.sensorType, sensorType))
-      : await db.select().from(sensorReadings);
+      ? await db.select().from(sensorReadings).where(eq(sensorReadings.sensorType, sensorType)).orderBy(desc(sensorReadings.timestamp))
+      : await db.select().from(sensorReadings).orderBy(desc(sensorReadings.timestamp));
     return limit ? rows.slice(0, limit) : rows;
   }
   async createSensorReading(reading: InsertSensorReading): Promise<SensorReading> {
