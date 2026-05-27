@@ -270,6 +270,17 @@ export const pressLogs = pgTable("press_logs", {
 
 export const insertPressLogSchema = createInsertSchema(pressLogs).omit({ id: true });
 
+// Users — server-side auth (single admin for now; roles = P2)
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  username: text("username").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  role: text("role").notNull().default("admin"), // admin (Operator/Sales = P2)
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertUserSchema = createInsertSchema(users).omit({ id: true, createdAt: true });
+
 export type Job = typeof jobs.$inferSelect;
 export type InsertJob = z.infer<typeof insertJobSchema>;
 export type ProductionRun = typeof productionRuns.$inferSelect;
@@ -292,3 +303,5 @@ export type Vendor = typeof vendors.$inferSelect;
 export type InsertVendor = z.infer<typeof insertVendorSchema>;
 export type PressLog = typeof pressLogs.$inferSelect;
 export type InsertPressLog = z.infer<typeof insertPressLogSchema>;
+export type User = typeof users.$inferSelect;
+export type InsertUser = z.infer<typeof insertUserSchema>;
