@@ -10,6 +10,13 @@ import type {
   Lead, InsertLead,
   Vendor, InsertVendor,
   PressLog, InsertPressLog,
+  User, InsertUser,
+} from "@shared/schema";
+import { eq } from "drizzle-orm";
+import { db } from "./db";
+import {
+  jobs, productionRuns, financials, maintenanceTasks, sensorReadings,
+  inventory, arAging, shipments, leads, vendors, pressLogs, users,
 } from "@shared/schema";
 
 export interface IStorage {
@@ -63,6 +70,10 @@ export interface IStorage {
   getPressLog(id: number): Promise<PressLog | undefined>;
   createPressLog(log: InsertPressLog): Promise<PressLog>;
   updatePressLog(id: number, updates: Partial<InsertPressLog>): Promise<PressLog | undefined>;
+
+  // Users
+  getUserByUsername(username: string): Promise<User | undefined>;
+  createUser(user: InsertUser): Promise<User>;
 }
 
 export class MemStorage implements IStorage {
@@ -77,6 +88,7 @@ export class MemStorage implements IStorage {
   private leadsMap: Map<number, Lead> = new Map();
   private vendorsMap: Map<number, Vendor> = new Map();
   private pressLogsMap: Map<number, PressLog> = new Map();
+  private usersMap: Map<number, User> = new Map();
   private nextId = 1;
 
   constructor() {
@@ -1214,6 +1226,156 @@ export class MemStorage implements IStorage {
     this.pressLogsMap.set(id, updated);
     return updated;
   }
+
+  // Users
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    return Array.from(this.usersMap.values()).find(u => u.username === username);
+  }
+  async createUser(user: InsertUser): Promise<User> {
+    const id = this.getNextId();
+    const created = { ...user, id, createdAt: new Date() } as User;
+    this.usersMap.set(id, created);
+    return created;
+  }
 }
 
-export const storage = new MemStorage();
+export class DrizzleStorage implements IStorage {
+  // Jobs
+  async getJobs(): Promise<Job[]> {
+    return db.select().from(jobs);
+  }
+  async getJob(id: number): Promise<Job | undefined> {
+    const r = await db.select().from(jobs).where(eq(jobs.id, id));
+    return r[0];
+  }
+  async getJobsByStatus(status: string): Promise<Job[]> {
+    return db.select().from(jobs).where(eq(jobs.status, status));
+  }
+  async createJob(job: InsertJob): Promise<Job> {
+    const r = await db.insert(jobs).values(job).returning();
+    return r[0];
+  }
+  async updateJob(id: number, updates: Partial<InsertJob>): Promise<Job | undefined> {
+    const r = await db.update(jobs).set(updates).where(eq(jobs.id, id)).returning();
+    return r[0];
+  }
+
+  // Production Runs
+  async getProductionRuns(): Promise<ProductionRun[]> {
+    return db.select().from(productionRuns);
+  }
+  async getProductionRunsByJob(jobId: string): Promise<ProductionRun[]> {
+    return db.select().from(productionRuns).where(eq(productionRuns.jobId, jobId));
+  }
+  async createProductionRun(run: InsertProductionRun): Promise<ProductionRun> {
+    const r = await db.insert(productionRuns).values(run).returning();
+    return r[0];
+  }
+
+  // Financials
+  async getFinancials(): Promise<Financial[]> {
+    return db.select().from(financials);
+  }
+  async getFinancialByPeriod(period: string): Promise<Financial | undefined> {
+    const r = await db.select().from(financials).where(eq(financials.period, period));
+    return r[0];
+  }
+
+  // Maintenance
+  async getMaintenanceTasks(): Promise<MaintenanceTask[]> {
+    return db.select().from(maintenanceTasks);
+  }
+  async updateMaintenanceTask(id: number, updates: Partial<InsertMaintenanceTask>): Promise<MaintenanceTask | undefined> {
+    const r = await db.update(maintenanceTasks).set(updates).where(eq(maintenanceTasks.id, id)).returning();
+    return r[0];
+  }
+
+  // Sensors
+  async getSensorReadings(sensorType?: string, limit?: number): Promise<SensorReading[]> {
+    const rows = sensorType
+      ? await db.select().from(sensorReadings).where(eq(sensorReadings.sensorType, sensorType))
+      : await db.select().from(sensorReadings);
+    return limit ? rows.slice(0, limit) : rows;
+  }
+  async createSensorReading(reading: InsertSensorReading): Promise<SensorReading> {
+    const r = await db.insert(sensorReadings).values(reading).returning();
+    return r[0];
+  }
+
+  // Inventory
+  async getInventory(): Promise<InventoryItem[]> {
+    return db.select().from(inventory);
+  }
+  async updateInventoryItem(id: number, updates: Partial<InsertInventoryItem>): Promise<InventoryItem | undefined> {
+    const r = await db.update(inventory).set(updates).where(eq(inventory.id, id)).returning();
+    return r[0];
+  }
+
+  // AR Aging
+  async getArAging(): Promise<ArAgingItem[]> {
+    return db.select().from(arAging);
+  }
+
+  // Shipments
+  async getShipments(): Promise<Shipment[]> {
+    return db.select().from(shipments);
+  }
+  async getShipmentsByJob(jobId: string): Promise<Shipment[]> {
+    return db.select().from(shipments).where(eq(shipments.jobId, jobId));
+  }
+
+  // Leads
+  async getLeads(): Promise<Lead[]> {
+    return db.select().from(leads);
+  }
+  async getLead(id: number): Promise<Lead | undefined> {
+    const r = await db.select().from(leads).where(eq(leads.id, id));
+    return r[0];
+  }
+  async createLead(lead: InsertLead): Promise<Lead> {
+    const r = await db.insert(leads).values(lead).returning();
+    return r[0];
+  }
+  async updateLead(id: number, updates: Partial<InsertLead>): Promise<Lead | undefined> {
+    const r = await db.update(leads).set(updates).where(eq(leads.id, id)).returning();
+    return r[0];
+  }
+
+  // Vendors
+  async getVendors(): Promise<Vendor[]> {
+    return db.select().from(vendors);
+  }
+  async getVendor(id: number): Promise<Vendor | undefined> {
+    const r = await db.select().from(vendors).where(eq(vendors.id, id));
+    return r[0];
+  }
+
+  // Press Logs
+  async getPressLogs(): Promise<PressLog[]> {
+    return db.select().from(pressLogs);
+  }
+  async getPressLog(id: number): Promise<PressLog | undefined> {
+    const r = await db.select().from(pressLogs).where(eq(pressLogs.id, id));
+    return r[0];
+  }
+  async createPressLog(log: InsertPressLog): Promise<PressLog> {
+    const r = await db.insert(pressLogs).values(log).returning();
+    return r[0];
+  }
+  async updatePressLog(id: number, updates: Partial<InsertPressLog>): Promise<PressLog | undefined> {
+    const r = await db.update(pressLogs).set(updates).where(eq(pressLogs.id, id)).returning();
+    return r[0];
+  }
+
+  // Users
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const r = await db.select().from(users).where(eq(users.username, username));
+    return r[0];
+  }
+  async createUser(user: InsertUser): Promise<User> {
+    const r = await db.insert(users).values(user).returning();
+    return r[0];
+  }
+}
+
+export const storage = new DrizzleStorage();
