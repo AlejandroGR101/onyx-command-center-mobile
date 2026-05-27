@@ -1,6 +1,7 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useState, useMemo } from "react";
+import { useToast } from "@/hooks/use-toast";
 import type { Lead, Job } from "@shared/schema";
 import {
   Users, Search, Filter, X, Phone, Mail, Globe, Instagram,
@@ -635,6 +636,31 @@ export default function Leads() {
   const [showForm, setShowForm] = useState(false);
   const [editLead, setEditLead] = useState<Lead | null>(null);
 
+  const { toast } = useToast();
+  const [sendingDigest, setSendingDigest] = useState(false);
+
+  async function handleSendDigest() {
+    setSendingDigest(true);
+    try {
+      const res = await apiRequest("POST", "/api/alerts/send-digest");
+      const data = await res.json();
+      toast({
+        title: data.sent ? "Digest enviado" : "Nada que enviar",
+        description: data.sent
+          ? `${data.overdueLeads} follow-ups + ${data.overdueMaintenance} mantenimiento`
+          : data.reason || "Sin vencidos",
+      });
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err?.message || "No se pudo enviar el digest",
+        variant: "destructive",
+      });
+    } finally {
+      setSendingDigest(false);
+    }
+  }
+
   const handleSort = (field: string) => {
     if (sortField === field) {
       setSortDir(sortDir === "asc" ? "desc" : "asc");
@@ -760,6 +786,14 @@ export default function Leads() {
         <div className={`glow-card rounded-xl px-4 py-3 border ${overdueFollowUps > 0 ? "border-[#ff1744]/30" : "border-white/[0.06]"}`} style={{ background: overdueFollowUps > 0 ? "rgba(255,23,68,0.04)" : "rgba(18,19,26,0.8)" }}>
           <div className="text-[10px] font-medium tracking-[0.12em] uppercase text-white/30">Overdue Follow-ups</div>
           <div className={`text-2xl font-bold tabular-nums mt-1 ${overdueFollowUps > 0 ? "text-[#ff1744]" : "text-white/90"}`}>{overdueFollowUps}</div>
+          <button
+            data-testid="send-digest"
+            onClick={handleSendDigest}
+            disabled={sendingDigest}
+            className="rounded-lg px-3 py-2 text-xs font-medium text-white/80 border border-white/[0.08] bg-white/[0.04] hover:bg-white/[0.08] transition-colors disabled:opacity-40"
+          >
+            {sendingDigest ? "Enviando…" : "Enviar digest ahora"}
+          </button>
         </div>
         <div className="glow-card rounded-xl px-4 py-3 border border-white/[0.06]" style={{ background: "rgba(18,19,26,0.8)" }}>
           <div className="text-[10px] font-medium tracking-[0.12em] uppercase text-white/30">Won / Closed</div>
