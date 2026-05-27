@@ -2,6 +2,8 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { requireAuth } from "./auth";
+import { sendOverdueDigest } from "./notifications";
+import { isEmailConfigured } from "./email";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -187,6 +189,19 @@ export async function registerRoutes(
     const updated = await storage.updatePressLog(parseInt(req.params.id), req.body);
     if (!updated) return res.status(404).json({ error: "Press log not found" });
     res.json(updated);
+  });
+
+  // === ALERTS ===
+  app.post("/api/alerts/send-digest", async (_req, res) => {
+    if (!isEmailConfigured()) {
+      return res.status(400).json({ error: "Email no configurado (RESEND_API_KEY / ALERT_RECIPIENTS)" });
+    }
+    try {
+      const summary = await sendOverdueDigest();
+      res.json(summary);
+    } catch (err: any) {
+      res.status(502).json({ error: err?.message || "Error enviando email" });
+    }
   });
 
   return httpServer;

@@ -4,6 +4,7 @@ import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
 import { setupAuth } from "./auth";
+import { registerNotificationSchedule } from "./notifications";
 
 const app = express();
 const httpServer = createServer(app);
@@ -29,6 +30,7 @@ app.use(
 app.use(express.urlencoded({ extended: false }));
 
 setupAuth(app);
+registerNotificationSchedule();
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
