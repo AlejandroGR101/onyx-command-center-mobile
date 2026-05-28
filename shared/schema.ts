@@ -295,6 +295,7 @@ export const quickbooksTokens = pgTable("quickbooks_tokens", {
 });
 
 export const insertQuickbooksTokenSchema = createInsertSchema(quickbooksTokens).omit({
+  id: true,
   createdAt: true,
   updatedAt: true,
 });
