@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import {
   ChevronLeft,
@@ -317,6 +318,39 @@ export default function Finance() {
   const [selectedMonth, setSelectedMonth] = useState("2026-01");
   const [tab, setTab] = useState<FinanceTab>("pnl");
 
+  const qc = useQueryClient();
+  const { toast } = useToast();
+  const [syncingQb, setSyncingQb] = useState(false);
+  const qbStatus = useQuery<{ connected: boolean; realmId?: string; environment?: string; lastSyncAt?: string | null }>({
+    queryKey: ["/api/qb/status"],
+  });
+
+  async function handleQbSync() {
+    setSyncingQb(true);
+    try {
+      const res = await apiRequest("POST", "/api/qb/sync");
+      const data = await res.json();
+      toast({
+        title: "QuickBooks sync OK",
+        description: `${data.updated} meses actualizados (${data.periods?.[0]} → ${data.periods?.[data.periods.length - 1]})`,
+      });
+      qc.invalidateQueries({ queryKey: ["/api/qb/status"] });
+      qc.invalidateQueries({ queryKey: ["/api/financials"] });
+    } catch (err: any) {
+      let msg = err?.message || "No se pudo sincronizar";
+      const jsonStart = msg.indexOf("{");
+      if (jsonStart >= 0) {
+        try {
+          const parsed = JSON.parse(msg.slice(jsonStart));
+          if (parsed?.error) msg = parsed.error;
+        } catch { /* noop */ }
+      }
+      toast({ title: "Error", description: msg, variant: "destructive" });
+    } finally {
+      setSyncingQb(false);
+    }
+  }
+
   const { data: financials = [] } = useQuery({
     queryKey: ["/api/financials"],
     queryFn: async () => { const res = await apiRequest("GET", "/api/financials"); return res.json(); },
@@ -365,6 +399,48 @@ export default function Finance() {
 
   return (
     <div data-testid="finance-page" className="space-y-5">
+        {/* QuickBooks status panel */}
+        <div
+          data-testid="qb-panel"
+          className="rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 py-3 mb-4 flex items-center justify-between gap-3"
+        >
+          <div className="flex items-center gap-3 text-xs">
+            <span className="uppercase tracking-[0.12em] text-white/40">QuickBooks</span>
+            {qbStatus.isLoading ? (
+              <span className="text-white/40">…</span>
+            ) : qbStatus.data?.connected ? (
+              <>
+                <span className="text-emerald-400">● Connected</span>
+                <span className="text-white/60">env: {qbStatus.data.environment}</span>
+                <span className="text-white/40">
+                  last sync: {qbStatus.data.lastSyncAt ? new Date(qbStatus.data.lastSyncAt).toLocaleString() : "—"}
+                </span>
+              </>
+            ) : (
+              <span className="text-white/50">● Disconnected</span>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            {qbStatus.data?.connected ? (
+              <button
+                data-testid="qb-sync"
+                onClick={handleQbSync}
+                disabled={syncingQb}
+                className="rounded-lg px-3 py-1.5 text-xs font-medium text-white/85 border border-white/[0.1] bg-white/[0.06] hover:bg-white/[0.1] transition-colors disabled:opacity-40"
+              >
+                {syncingQb ? "Sincronizando…" : "Sync now"}
+              </button>
+            ) : (
+              <a
+                data-testid="qb-connect"
+                href="/api/qb/connect"
+                className="rounded-lg px-3 py-1.5 text-xs font-medium text-white/85 border border-white/[0.1] bg-white/[0.06] hover:bg-white/[0.1] transition-colors"
+              >
+                Connect QuickBooks
+              </a>
+            )}
+          </div>
+        </div>
       {/* ─── Header row: Title + Month Switcher ─── */}
       <div className="flex items-center justify-between">
         <h1 className="font-display font-bold text-lg text-white/90">Financial Overview</h1>
