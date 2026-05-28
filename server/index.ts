@@ -5,6 +5,7 @@ import { serveStatic } from "./static";
 import { createServer } from "http";
 import { setupAuth } from "./auth";
 import { registerNotificationSchedule } from "./notifications";
+import { registerQuickbooksSchedule } from "./quickbooks/sync";
 
 const app = express();
 const httpServer = createServer(app);
@@ -31,6 +32,7 @@ app.use(express.urlencoded({ extended: false }));
 
 setupAuth(app);
 registerNotificationSchedule();
+registerQuickbooksSchedule();
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {

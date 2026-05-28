@@ -4,6 +4,14 @@ import { storage } from "./storage";
 import { requireAuth } from "./auth";
 import { sendOverdueDigest } from "./notifications";
 import { isEmailConfigured } from "./email";
+import {
+  getAuthorizeUrl,
+  verifyState,
+  exchangeCode,
+  getStatus as getQbStatus,
+  isQbConfigured,
+} from "./quickbooks/oauth";
+import { syncProfitAndLoss } from "./quickbooks/sync";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -201,6 +209,57 @@ export async function registerRoutes(
       res.json(summary);
     } catch (err: any) {
       res.status(502).json({ error: err?.message || "Error enviando email" });
+    }
+  });
+
+  // === QUICKBOOKS ===
+  app.get("/api/qb/status", async (_req, res) => {
+    res.json(await getQbStatus());
+  });
+
+  app.get("/api/qb/connect", (_req, res) => {
+    if (!isQbConfigured()) {
+      return res.status(400).json({ error: "QB no configurado (QB_CLIENT_ID / SECRET / REDIRECT_URI)" });
+    }
+    const { url } = getAuthorizeUrl();
+    res.redirect(url);
+  });
+
+  app.get("/api/qb/callback", async (req, res) => {
+    if (!isQbConfigured()) {
+      return res.status(400).json({ error: "QB no configurado" });
+    }
+    const state = String(req.query.state || "");
+    const realmId = String(req.query.realmId || "");
+    if (!state || !verifyState(state)) {
+      return res.status(400).json({ error: "state inválido" });
+    }
+    if (!realmId) {
+      return res.status(400).json({ error: "realmId ausente" });
+    }
+    try {
+      // intuit-oauth necesita la URL completa del callback (con query string).
+      const proto = (req.headers["x-forwarded-proto"] as string) || req.protocol;
+      const host = req.get("host");
+      const fullUrl = `${proto}://${host}${req.originalUrl}`;
+      await exchangeCode(fullUrl, realmId);
+      return res.redirect("/#/finance");
+    } catch (err: any) {
+      return res.status(502).json({ error: err?.message || "Error en OAuth callback" });
+    }
+  });
+
+  app.post("/api/qb/sync", async (_req, res) => {
+    if (!isQbConfigured()) {
+      return res.status(400).json({ error: "QB no configurado" });
+    }
+    try {
+      const summary = await syncProfitAndLoss(12);
+      res.json(summary);
+    } catch (err: any) {
+      const msg = err?.message || "Error en sync QB";
+      if (msg.includes("QB no conectado")) return res.status(400).json({ error: msg });
+      res.status(502).json({ error: msg });
     }
   });
 
