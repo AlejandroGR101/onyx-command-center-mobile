@@ -11,12 +11,14 @@ import type {
   Vendor, InsertVendor,
   PressLog, InsertPressLog,
   User, InsertUser,
+  QuickbooksToken, InsertQuickbooksToken,
 } from "@shared/schema";
 import { eq, desc } from "drizzle-orm";
 import { db } from "./db";
 import {
   jobs, productionRuns, financials, maintenanceTasks, sensorReadings,
   inventory, arAging, shipments, leads, vendors, pressLogs, users,
+  quickbooksTokens,
 } from "@shared/schema";
 
 export interface IStorage {
@@ -74,6 +76,15 @@ export interface IStorage {
   // Users
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+
+  // QuickBooks tokens
+  getQbTokens(): Promise<QuickbooksToken | undefined>;
+  upsertQbTokens(t: InsertQuickbooksToken): Promise<QuickbooksToken>;
+  updateQbLastSync(at: Date): Promise<void>;
+  clearQbTokens(): Promise<void>;
+
+  // Financials — upsert parcial (solo columnas P&L)
+  upsertFinancialPartial(period: string, partial: { revenue: number; cogs: number; operatingExpenses: number; netIncome: number; }): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -89,6 +100,7 @@ export class MemStorage implements IStorage {
   private vendorsMap: Map<number, Vendor> = new Map();
   private pressLogsMap: Map<number, PressLog> = new Map();
   private usersMap: Map<number, User> = new Map();
+  private qbTokens: QuickbooksToken | undefined;
   private nextId = 1;
 
   constructor() {
@@ -1237,6 +1249,53 @@ export class MemStorage implements IStorage {
     this.usersMap.set(id, created);
     return created;
   }
+
+  async getQbTokens(): Promise<QuickbooksToken | undefined> {
+    return this.qbTokens;
+  }
+  async upsertQbTokens(t: InsertQuickbooksToken): Promise<QuickbooksToken> {
+    const now = new Date();
+    this.qbTokens = {
+      ...(t as any),
+      id: 1,
+      createdAt: this.qbTokens?.createdAt ?? now,
+      updatedAt: now,
+    } as QuickbooksToken;
+    return this.qbTokens;
+  }
+  async updateQbLastSync(at: Date): Promise<void> {
+    if (this.qbTokens) {
+      this.qbTokens = { ...this.qbTokens, lastSyncAt: at, updatedAt: new Date() };
+    }
+  }
+  async clearQbTokens(): Promise<void> {
+    this.qbTokens = undefined;
+  }
+  async upsertFinancialPartial(
+    period: string,
+    partial: { revenue: number; cogs: number; operatingExpenses: number; netIncome: number },
+  ): Promise<void> {
+    const existing = Array.from(this.financials.values()).find((f) => f.period === period);
+    if (existing) {
+      existing.revenue = partial.revenue;
+      existing.cogs = partial.cogs;
+      existing.operatingExpenses = partial.operatingExpenses;
+      existing.netIncome = partial.netIncome;
+    } else {
+      const id = this.getNextId();
+      this.financials.set(id, {
+        id,
+        period,
+        revenue: partial.revenue,
+        cogs: partial.cogs,
+        operatingExpenses: partial.operatingExpenses,
+        netIncome: partial.netIncome,
+        cashPosition: null,
+        arTotal: null,
+        apTotal: null,
+      } as any);
+    }
+  }
 }
 
 export class DrizzleStorage implements IStorage {
@@ -1375,6 +1434,66 @@ export class DrizzleStorage implements IStorage {
   async createUser(user: InsertUser): Promise<User> {
     const r = await db.insert(users).values(user).returning();
     return r[0];
+  }
+
+  // QuickBooks tokens
+  async getQbTokens(): Promise<QuickbooksToken | undefined> {
+    const r = await db.select().from(quickbooksTokens).where(eq(quickbooksTokens.id, 1));
+    return r[0];
+  }
+  async upsertQbTokens(t: InsertQuickbooksToken): Promise<QuickbooksToken> {
+    const now = new Date();
+    const r = await db
+      .insert(quickbooksTokens)
+      .values({ ...t, id: 1, updatedAt: now })
+      .onConflictDoUpdate({
+        target: quickbooksTokens.id,
+        set: {
+          realmId: t.realmId,
+          accessToken: t.accessToken,
+          refreshToken: t.refreshToken,
+          expiresAt: t.expiresAt,
+          environment: t.environment,
+          lastSyncAt: t.lastSyncAt ?? null,
+          updatedAt: now,
+        },
+      })
+      .returning();
+    return r[0];
+  }
+  async updateQbLastSync(at: Date): Promise<void> {
+    await db
+      .update(quickbooksTokens)
+      .set({ lastSyncAt: at, updatedAt: new Date() })
+      .where(eq(quickbooksTokens.id, 1));
+  }
+  async clearQbTokens(): Promise<void> {
+    await db.delete(quickbooksTokens).where(eq(quickbooksTokens.id, 1));
+  }
+
+  // Financials — upsert parcial (preserva cashPosition / arTotal / apTotal existentes)
+  async upsertFinancialPartial(
+    period: string,
+    partial: { revenue: number; cogs: number; operatingExpenses: number; netIncome: number },
+  ): Promise<void> {
+    await db
+      .insert(financials)
+      .values({
+        period,
+        revenue: partial.revenue,
+        cogs: partial.cogs,
+        operatingExpenses: partial.operatingExpenses,
+        netIncome: partial.netIncome,
+      })
+      .onConflictDoUpdate({
+        target: financials.period,
+        set: {
+          revenue: partial.revenue,
+          cogs: partial.cogs,
+          operatingExpenses: partial.operatingExpenses,
+          netIncome: partial.netIncome,
+        },
+      });
   }
 }
 
