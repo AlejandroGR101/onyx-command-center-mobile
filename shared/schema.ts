@@ -52,7 +52,7 @@ export const productionRuns = pgTable("production_runs", {
 // Financial Summaries
 export const financials = pgTable("financials", {
   id: serial("id").primaryKey(),
-  period: text("period").notNull(), // e.g. "2026-01", "2026-02"
+  period: text("period").notNull().unique(), // e.g. "2026-01", "2026-02"
   revenue: real("revenue").notNull(),
   cogs: real("cogs").notNull(),
   operatingExpenses: real("operating_expenses").notNull(),
@@ -281,6 +281,24 @@ export const users = pgTable("users", {
 
 export const insertUserSchema = createInsertSchema(users).omit({ id: true, createdAt: true });
 
+// QuickBooks Online tokens — single-row (id=1).
+export const quickbooksTokens = pgTable("quickbooks_tokens", {
+  id: integer("id").primaryKey().default(1),
+  realmId: text("realm_id").notNull(),
+  accessToken: text("access_token").notNull(),
+  refreshToken: text("refresh_token").notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+  environment: text("environment").notNull(), // 'sandbox' | 'production'
+  lastSyncAt: timestamp("last_sync_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertQuickbooksTokenSchema = createInsertSchema(quickbooksTokens).omit({
+  createdAt: true,
+  updatedAt: true,
+});
+
 export type Job = typeof jobs.$inferSelect;
 export type InsertJob = z.infer<typeof insertJobSchema>;
 export type ProductionRun = typeof productionRuns.$inferSelect;
@@ -305,3 +323,5 @@ export type PressLog = typeof pressLogs.$inferSelect;
 export type InsertPressLog = z.infer<typeof insertPressLogSchema>;
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
+export type QuickbooksToken = typeof quickbooksTokens.$inferSelect;
+export type InsertQuickbooksToken = z.infer<typeof insertQuickbooksTokenSchema>;
