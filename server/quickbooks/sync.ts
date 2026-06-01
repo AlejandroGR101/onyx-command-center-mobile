@@ -1,11 +1,12 @@
 import cron from "node-cron";
 import { ensureValidAccessToken } from "./oauth";
-import { parseProfitAndLossReport, type ParsedFinancial } from "./parse";
+import { parseProfitAndLossReport, parseProfitAndLossLineItems, type ParsedFinancial } from "./parse";
 import { storage } from "../storage";
 
 export interface SyncResult {
   periods: string[];
   updated: number;
+  lineItems: number;
 }
 
 function fmtDate(d: Date): string {
@@ -57,8 +58,27 @@ export async function syncProfitAndLoss(months = 12): Promise<SyncResult> {
       netIncome: r.netIncome,
     });
   }
+  // Line items (QB-2): delete-by-period + insert por cada period sincronizado.
+  const lineItemsRaw = parseProfitAndLossLineItems(json);
+  const syncedPeriods = rows.map((r) => r.period);
+  // Solo conservar line items de los periods sincronizados (defensivo).
+  const lineItemRowsForReplace = lineItemsRaw
+    .filter((li) => syncedPeriods.includes(li.period))
+    .map((li) => ({
+      period: li.period,
+      category: li.category,
+      label: li.label,
+      amount: li.amount,
+      sortOrder: li.sortOrder,
+    }));
+  await storage.replaceLineItemsForPeriods(syncedPeriods, lineItemRowsForReplace);
+
   await storage.updateQbLastSync(new Date());
-  return { periods: rows.map((r) => r.period), updated: rows.length };
+  return {
+    periods: rows.map((r) => r.period),
+    updated: rows.length,
+    lineItems: lineItemRowsForReplace.length,
+  };
 }
 
 export function registerQuickbooksSchedule(): void {
