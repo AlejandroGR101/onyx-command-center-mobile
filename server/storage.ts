@@ -13,13 +13,14 @@ import type {
   User, InsertUser,
   QuickbooksToken, InsertQuickbooksToken,
   FinancialLineItem, InsertFinancialLineItem,
+  BalanceSheetItem, InsertBalanceSheetItem,
 } from "@shared/schema";
 import { eq, desc, inArray, asc } from "drizzle-orm";
 import { db } from "./db";
 import {
   jobs, productionRuns, financials, maintenanceTasks, sensorReadings,
   inventory, arAging, shipments, leads, vendors, pressLogs, users,
-  quickbooksTokens, financialLineItems,
+  quickbooksTokens, financialLineItems, balanceSheetItems,
 } from "@shared/schema";
 
 export interface IStorage {
@@ -90,6 +91,16 @@ export interface IStorage {
   // Financial line items
   getLineItemsByPeriod(period: string): Promise<FinancialLineItem[]>;
   replaceLineItemsForPeriods(periods: string[], rows: InsertFinancialLineItem[]): Promise<void>;
+
+  // Balance Sheet
+  getBalanceSheetByPeriod(period: string): Promise<BalanceSheetItem[]>;
+  replaceBalanceSheetForPeriods(periods: string[], rows: InsertBalanceSheetItem[]): Promise<void>;
+
+  // AR Aging — replace snapshot
+  replaceArAging(rows: InsertArAgingItem[]): Promise<void>;
+
+  // Financials metrics (cashPosition / arTotal / apTotal) — partial upsert
+  updateFinancialMetrics(period: string, partial: { cashPosition?: number; arTotal?: number; apTotal?: number }): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -107,6 +118,7 @@ export class MemStorage implements IStorage {
   private usersMap: Map<number, User> = new Map();
   private qbTokens: QuickbooksToken | undefined;
   private lineItemsMap: Map<number, FinancialLineItem> = new Map();
+  private bsMap: Map<number, BalanceSheetItem> = new Map();
   private nextId = 1;
 
   constructor() {
@@ -1320,6 +1332,54 @@ export class MemStorage implements IStorage {
       this.lineItemsMap.set(id, { ...(r as any), id, createdAt: new Date() } as FinancialLineItem);
     }
   }
+
+  async getBalanceSheetByPeriod(period: string): Promise<BalanceSheetItem[]> {
+    return Array.from(this.bsMap.values())
+      .filter((r) => r.period === period)
+      .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+  }
+  async replaceBalanceSheetForPeriods(periods: string[], rows: InsertBalanceSheetItem[]): Promise<void> {
+    for (const [id, row] of Array.from(this.bsMap.entries())) {
+      if (periods.includes(row.period)) this.bsMap.delete(id);
+    }
+    for (const r of rows) {
+      const id = this.getNextId();
+      this.bsMap.set(id, { ...(r as any), id, createdAt: new Date() } as BalanceSheetItem);
+    }
+  }
+
+  async replaceArAging(rows: InsertArAgingItem[]): Promise<void> {
+    this.arAgingItems.clear();
+    for (const r of rows) {
+      const id = this.getNextId();
+      this.arAgingItems.set(id, { ...(r as any), id } as ArAgingItem);
+    }
+  }
+
+  async updateFinancialMetrics(
+    period: string,
+    partial: { cashPosition?: number; arTotal?: number; apTotal?: number },
+  ): Promise<void> {
+    const existing = Array.from(this.financials.values()).find((f) => f.period === period);
+    if (existing) {
+      if (partial.cashPosition !== undefined) existing.cashPosition = partial.cashPosition;
+      if (partial.arTotal !== undefined) existing.arTotal = partial.arTotal;
+      if (partial.apTotal !== undefined) existing.apTotal = partial.apTotal;
+    } else {
+      const id = this.getNextId();
+      this.financials.set(id, {
+        id,
+        period,
+        revenue: 0,
+        cogs: 0,
+        operatingExpenses: 0,
+        netIncome: 0,
+        cashPosition: partial.cashPosition ?? null,
+        arTotal: partial.arTotal ?? null,
+        apTotal: partial.apTotal ?? null,
+      } as any);
+    }
+  }
 }
 
 export class DrizzleStorage implements IStorage {
@@ -1535,6 +1595,59 @@ export class DrizzleStorage implements IStorage {
     if (rows.length > 0) {
       await db.insert(financialLineItems).values(rows);
     }
+  }
+
+  // Balance Sheet
+  async getBalanceSheetByPeriod(period: string): Promise<BalanceSheetItem[]> {
+    return db
+      .select()
+      .from(balanceSheetItems)
+      .where(eq(balanceSheetItems.period, period))
+      .orderBy(asc(balanceSheetItems.sortOrder));
+  }
+  async replaceBalanceSheetForPeriods(periods: string[], rows: InsertBalanceSheetItem[]): Promise<void> {
+    if (periods.length > 0) {
+      await db.delete(balanceSheetItems).where(inArray(balanceSheetItems.period, periods));
+    }
+    if (rows.length > 0) {
+      await db.insert(balanceSheetItems).values(rows);
+    }
+  }
+
+  // AR Aging
+  async replaceArAging(rows: InsertArAgingItem[]): Promise<void> {
+    await db.delete(arAging);
+    if (rows.length > 0) {
+      await db.insert(arAging).values(rows);
+    }
+  }
+
+  // Financials metrics
+  async updateFinancialMetrics(
+    period: string,
+    partial: { cashPosition?: number; arTotal?: number; apTotal?: number },
+  ): Promise<void> {
+    const setClause: Record<string, number> = {};
+    if (partial.cashPosition !== undefined) setClause.cashPosition = partial.cashPosition;
+    if (partial.arTotal !== undefined) setClause.arTotal = partial.arTotal;
+    if (partial.apTotal !== undefined) setClause.apTotal = partial.apTotal;
+    if (Object.keys(setClause).length === 0) return;
+    await db
+      .insert(financials)
+      .values({
+        period,
+        revenue: 0,
+        cogs: 0,
+        operatingExpenses: 0,
+        netIncome: 0,
+        cashPosition: partial.cashPosition ?? null,
+        arTotal: partial.arTotal ?? null,
+        apTotal: partial.apTotal ?? null,
+      })
+      .onConflictDoUpdate({
+        target: financials.period,
+        set: setClause,
+      });
   }
 }
 
