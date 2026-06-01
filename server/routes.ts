@@ -11,7 +11,7 @@ import {
   getStatus as getQbStatus,
   isQbConfigured,
 } from "./quickbooks/oauth";
-import { syncProfitAndLoss } from "./quickbooks/sync";
+import { syncAll } from "./quickbooks/sync";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -120,6 +120,37 @@ export async function registerRoutes(
         items: matching.map((i) => ({
           label: i.label,
           amount: isExpense ? -Math.abs(i.amount) : i.amount,
+        })),
+      });
+    }
+    res.json(grouped);
+  });
+
+  // === BALANCE SHEET ===
+  app.get("/api/financials/balance-sheet", async (req, res) => {
+    const period = String(req.query.period || "");
+    if (!period) {
+      return res.status(400).json({ error: "period requerido" });
+    }
+    if (!/^\d{4}-\d{2}$/.test(period)) {
+      return res.status(400).json({ error: "period inválido (formato YYYY-MM)" });
+    }
+    const items = await storage.getBalanceSheetByPeriod(period);
+
+    const order = ["Assets", "Liabilities", "Equity"];
+    const grouped: Array<{ heading: string; lines: Array<{ label: string; amount: number; indent: number; bold: boolean }> }> = [];
+    for (const section of order) {
+      const matching = items
+        .filter((i) => i.section === section)
+        .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+      if (matching.length === 0) continue;
+      grouped.push({
+        heading: section,
+        lines: matching.map((i) => ({
+          label: i.label,
+          amount: i.amount,
+          indent: i.indent ?? 0,
+          bold: i.isBold ?? false,
         })),
       });
     }
@@ -285,7 +316,7 @@ export async function registerRoutes(
       return res.status(400).json({ error: "QB no configurado" });
     }
     try {
-      const summary = await syncProfitAndLoss(12);
+      const summary = await syncAll(12);
       res.json(summary);
     } catch (err: any) {
       const msg = err?.message || "Error en sync QB";
