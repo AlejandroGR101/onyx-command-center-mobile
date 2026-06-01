@@ -300,6 +300,22 @@ export const insertQuickbooksTokenSchema = createInsertSchema(quickbooksTokens).
   updatedAt: true,
 });
 
+// P&L line items por mes (de QuickBooks Report Detail rows).
+export const financialLineItems = pgTable("financial_line_items", {
+  id: serial("id").primaryKey(),
+  period: text("period").notNull(),         // "YYYY-MM"
+  category: text("category").notNull(),     // "Revenue" | "Cost of Goods Sold" | "Operating Expenses"
+  label: text("label").notNull(),           // e.g. "Vinyl Pellets"
+  amount: real("amount").notNull(),         // RAW QB amount (positive — sign-flipping happens at endpoint)
+  sortOrder: integer("sort_order").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertFinancialLineItemSchema = createInsertSchema(financialLineItems).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type Job = typeof jobs.$inferSelect;
 export type InsertJob = z.infer<typeof insertJobSchema>;
 export type ProductionRun = typeof productionRuns.$inferSelect;
@@ -326,3 +342,5 @@ export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type QuickbooksToken = typeof quickbooksTokens.$inferSelect;
 export type InsertQuickbooksToken = z.infer<typeof insertQuickbooksTokenSchema>;
+export type FinancialLineItem = typeof financialLineItems.$inferSelect;
+export type InsertFinancialLineItem = z.infer<typeof insertFinancialLineItemSchema>;
