@@ -512,7 +512,7 @@ export default function Finance() {
             <h2 className="font-display font-semibold text-sm text-white/70">
               Balance Sheet — As of {MONTH_LABELS[selectedMonth]}
             </h2>
-            {selectedMonth === "2026-01" && (
+            {bsSections.length > 0 && (
               <span className="text-[10px] px-2 py-0.5 rounded bg-[#00e5ff]/10 text-[#00e5ff] font-medium tracking-wide">
                 FROM QUICKBOOKS
               </span>
