@@ -50,81 +50,9 @@ const SHORT_LABELS: Record<string, string> = {
 };
 
 
-/* ─── Balance Sheet (from real QuickBooks January 2026) ─── */
+/* ─── Balance Sheet types ─── */
 type BSLine = { label: string; amount: number; indent?: number; bold?: boolean };
 type BSSection = { heading: string; lines: BSLine[] };
-
-const BALANCE_SHEETS: Record<string, BSSection[]> = {
-  "2026-01": [
-    { heading: "Assets", lines: [
-      { label: "Bank Accounts", amount: 0, indent: 0, bold: true },
-      { label: "Wells Fargo Checking", amount: 2676.58, indent: 1 },
-      { label: "Wells Fargo Savings", amount: 2022.14, indent: 1 },
-      { label: "Affirm / PayPal / Stripe", amount: 0, indent: 1 },
-      { label: "Total Bank Accounts", amount: 4698.72, indent: 0, bold: true },
-      { label: "Accounts Receivable", amount: 5700.66, indent: 0, bold: true },
-      { label: "Other Current Assets", amount: 0, indent: 0, bold: true },
-      { label: "Advances to Capsule Labs", amount: 93700.97, indent: 1 },
-      { label: "Advances to Moe Espinosa", amount: 2000.00, indent: 1 },
-      { label: "Equipment Deposits", amount: 100023.16, indent: 1 },
-      { label: "Security Deposit", amount: 12000.00, indent: 1 },
-      { label: "Total Other Current Assets", amount: 207724.13, indent: 0, bold: true },
-      { label: "Total Current Assets", amount: 218123.51, indent: 0, bold: true },
-      { label: "Fixed Assets", amount: 0, indent: 0, bold: true },
-      { label: "Leasehold Improvements", amount: 21401.25, indent: 1 },
-      { label: "Machinery & Equipment", amount: 386911.40, indent: 1 },
-      { label: "Office Furniture", amount: 624.89, indent: 1 },
-      { label: "Total Fixed Assets", amount: 408937.54, indent: 0, bold: true },
-      { label: "TOTAL ASSETS", amount: 627061.05, indent: 0, bold: true },
-    ]},
-    { heading: "Liabilities", lines: [
-      { label: "Accounts Payable", amount: 24813.94, indent: 0, bold: true },
-      { label: "Credit Cards", amount: 0, indent: 0, bold: true },
-      { label: "Gil's Credit Card (0108)", amount: 6406.38, indent: 1 },
-      { label: "Matt's Credit Card (0217)", amount: 4110.83, indent: 1 },
-      { label: "Total Credit Cards", amount: 10517.21, indent: 0, bold: true },
-      { label: "Sales Tax Payable", amount: 408.35, indent: 0 },
-      { label: "TOTAL LIABILITIES", amount: 35739.50, indent: 0, bold: true },
-    ]},
-    { heading: "Equity", lines: [
-      { label: "CSMAKAR Capital Account", amount: 329076.60, indent: 0 },
-      { label: "David DeCristo Capital", amount: 100000.00, indent: 0 },
-      { label: "Mohamed E. Capital", amount: 78478.35, indent: 0 },
-      { label: "Surachai S. Capital", amount: 289933.20, indent: 0 },
-      { label: "Retained Earnings", amount: -198744.21, indent: 0 },
-      { label: "Net Income", amount: -7422.39, indent: 0 },
-      { label: "TOTAL EQUITY", amount: 591321.55, indent: 0, bold: true },
-      { label: "TOTAL LIABILITIES & EQUITY", amount: 627061.05, indent: 0, bold: true },
-    ]},
-  ],
-};
-
-// Generate approximate balance sheets for other months from January data
-const JAN_ASSETS = 627061.05;
-const JAN_LIABILITIES = 35739.50;
-const JAN_EQUITY = 591321.55;
-
-for (const m of MONTHS) {
-  if (m === "2026-01") continue;
-  const delta = Math.random() * 12000 - 6000; // ±6k variance
-  const assets = JAN_ASSETS + delta;
-  const liab = JAN_LIABILITIES + (Math.random() * 4000 - 2000);
-  const equity = assets - liab;
-  BALANCE_SHEETS[m] = [
-    { heading: "Assets", lines: [
-      { label: "Current Assets", amount: assets - 408937.54 + (Math.random() * 5000 - 2500), indent: 0, bold: true },
-      { label: "Fixed Assets", amount: 408937.54, indent: 0, bold: true },
-      { label: "TOTAL ASSETS", amount: assets, indent: 0, bold: true },
-    ]},
-    { heading: "Liabilities", lines: [
-      { label: "TOTAL LIABILITIES", amount: liab, indent: 0, bold: true },
-    ]},
-    { heading: "Equity", lines: [
-      { label: "TOTAL EQUITY", amount: equity, indent: 0, bold: true },
-      { label: "TOTAL LIABILITIES & EQUITY", amount: assets, indent: 0, bold: true },
-    ]},
-  ];
-}
 
 /* ─── Tabs ─── */
 type FinanceTab = "pnl" | "balance-sheet" | "trends";
@@ -239,13 +167,18 @@ export default function Finance() {
     try {
       const res = await apiRequest("POST", "/api/qb/sync");
       const data = await res.json();
+      const plMonths = data?.pl?.updated ?? 0;
+      const bsRows = data?.bs?.updated ?? 0;
+      const arRows = data?.ar?.count ?? 0;
       toast({
         title: "QuickBooks sync OK",
-        description: `${data.updated} meses actualizados (${data.periods?.[0]} → ${data.periods?.[data.periods.length - 1]})`,
+        description: `${plMonths} meses P&L · ${bsRows} líneas BS · ${arRows} AR rows`,
       });
       qc.invalidateQueries({ queryKey: ["/api/qb/status"] });
       qc.invalidateQueries({ queryKey: ["/api/financials"] });
       qc.invalidateQueries({ queryKey: ["/api/financials/line-items"] });
+      qc.invalidateQueries({ queryKey: ["/api/financials/balance-sheet"] });
+      qc.invalidateQueries({ queryKey: ["/api/ar-aging"] });
     } catch (err: any) {
       let msg = err?.message || "No se pudo sincronizar";
       const jsonStart = msg.indexOf("{");
@@ -280,6 +213,13 @@ export default function Finance() {
       return res.json();
     },
   });
+  const bsQuery = useQuery<BSSection[]>({
+    queryKey: ["/api/financials/balance-sheet", selectedMonth],
+    queryFn: async () => {
+      const res = await apiRequest("GET", `/api/financials/balance-sheet?period=${encodeURIComponent(selectedMonth)}`);
+      return res.json();
+    },
+  });
 
   const monthIdx = MONTHS.indexOf(selectedMonth);
   const canPrev = monthIdx > 0;
@@ -295,7 +235,7 @@ export default function Finance() {
   const netIncome = grossProfit + totalOpEx;
   const grossMargin = revenue > 0 ? (grossProfit / revenue * 100) : 0;
 
-  const bsSections = BALANCE_SHEETS[selectedMonth] || BALANCE_SHEETS["2026-01"];
+  const bsSections = bsQuery.data ?? [];
 
   // Completed jobs for profitability table
   const completedJobs = jobs.filter((j: any) => j.actualRevenue && j.actualCogs).map((j: any) => {
@@ -580,49 +520,50 @@ export default function Finance() {
           </div>
 
           <div className="grid grid-cols-1 gap-0">
-            {bsSections.map((section) => (
-              <div key={section.heading} className="mb-4">
-                <div className="text-[11px] font-semibold tracking-[0.15em] uppercase text-[#00e5ff]/50 mb-2 pb-1 border-b border-white/[0.06]">
-                  {section.heading}
-                </div>
-                <div className="space-y-0">
-                  {section.lines.map((line, i) => {
-                    const isTotalRow = line.bold && (
-                      line.label.startsWith("Total") || line.label.startsWith("TOTAL")
-                    );
-                    return (
-                      <div
-                        key={`${section.heading}-${i}`}
-                        className={`flex items-center justify-between py-1.5 px-2 rounded text-xs ${
-                          isTotalRow ? "bg-white/[0.02] mt-1" : "hover:bg-white/[0.01]"
-                        }`}
-                        style={{ paddingLeft: `${(line.indent || 0) * 16 + 8}px` }}
-                      >
-                        <span className={`${line.bold ? "font-semibold text-white/80" : "text-white/50"}`}>
-                          {line.label}
-                        </span>
-                        <span
-                          className={`font-mono tabular-nums ${
-                            line.bold ? "font-bold text-white/90" : "text-white/60"
-                          } ${line.amount < 0 ? "text-[#ff1744]/80" : ""}`}
-                        >
-                          {line.amount < 0 ? `(${fmt2(line.amount)})` : fmt2(line.amount)}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
+            {bsQuery.isLoading ? (
+              <div className="text-white/40 text-sm py-6">Cargando…</div>
+            ) : bsSections.length === 0 ? (
+              <div className="rounded-xl border border-white/[0.08] bg-white/[0.04] p-6 text-center">
+                <div className="text-white/60 text-sm">No hay Balance Sheet para {selectedMonth}.</div>
+                <div className="text-white/40 text-xs mt-1">Sincroniza QuickBooks para ver el detalle.</div>
               </div>
-            ))}
+            ) : (
+              bsSections.map((section) => (
+                <div key={section.heading} className="mb-4">
+                  <div className="text-[11px] font-semibold tracking-[0.15em] uppercase text-[#00e5ff]/50 mb-2 pb-1 border-b border-white/[0.06]">
+                    {section.heading}
+                  </div>
+                  <div className="space-y-0">
+                    {section.lines.map((line, i) => {
+                      const isTotalRow = line.bold && (
+                        line.label.startsWith("Total") || line.label.startsWith("TOTAL")
+                      );
+                      return (
+                        <div
+                          key={`${section.heading}-${i}`}
+                          className={`flex items-center justify-between py-1.5 px-2 rounded text-xs ${
+                            isTotalRow ? "bg-white/[0.02] mt-1" : "hover:bg-white/[0.01]"
+                          }`}
+                          style={{ paddingLeft: `${(line.indent || 0) * 16 + 8}px` }}
+                        >
+                          <span className={`${line.bold ? "font-semibold text-white/80" : "text-white/50"}`}>
+                            {line.label}
+                          </span>
+                          <span
+                            className={`font-mono tabular-nums ${
+                              line.bold ? "font-bold text-white/90" : "text-white/60"
+                            } ${line.amount < 0 ? "text-[#ff1744]/80" : ""}`}
+                          >
+                            {line.amount < 0 ? `(${fmt2(line.amount)})` : fmt2(line.amount)}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))
+            )}
           </div>
-
-          {selectedMonth !== "2026-01" && (
-            <div className="mt-4 pt-3 border-t border-white/[0.06]">
-              <p className="text-[10px] text-white/25 italic">
-                Showing summarized balance sheet. Detailed line items available for January 2026 (from QuickBooks).
-              </p>
-            </div>
-          )}
         </div>
       )}
 
