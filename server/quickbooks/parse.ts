@@ -193,8 +193,9 @@ function walkBalanceSection(
     if (r?.Header?.ColData) {
       const label = String(r.Header.ColData[0]?.value ?? "").trim();
       if (label) {
-        for (const { period } of monthCols) {
-          out.push({ period, section, label, amount: 0, indent: depth, isBold: true, sortOrder: counter.n });
+        for (const { index, period } of monthCols) {
+          const amount = toNumber(r.Header.ColData[index]?.value);
+          out.push({ period, section, label, amount, indent: depth, isBold: true, sortOrder: counter.n });
         }
         counter.n++;
       }
