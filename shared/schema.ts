@@ -316,6 +316,24 @@ export const insertFinancialLineItemSchema = createInsertSchema(financialLineIte
   createdAt: true,
 });
 
+// Balance Sheet items por mes (de QuickBooks BalanceSheet report).
+export const balanceSheetItems = pgTable("balance_sheet_items", {
+  id: serial("id").primaryKey(),
+  period: text("period").notNull(),         // "YYYY-MM"
+  section: text("section").notNull(),       // "Assets" | "Liabilities" | "Equity"
+  label: text("label").notNull(),
+  amount: real("amount").notNull(),
+  indent: integer("indent").default(0),
+  isBold: boolean("is_bold").default(false),
+  sortOrder: integer("sort_order").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertBalanceSheetItemSchema = createInsertSchema(balanceSheetItems).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type Job = typeof jobs.$inferSelect;
 export type InsertJob = z.infer<typeof insertJobSchema>;
 export type ProductionRun = typeof productionRuns.$inferSelect;
@@ -344,3 +362,5 @@ export type QuickbooksToken = typeof quickbooksTokens.$inferSelect;
 export type InsertQuickbooksToken = z.infer<typeof insertQuickbooksTokenSchema>;
 export type FinancialLineItem = typeof financialLineItems.$inferSelect;
 export type InsertFinancialLineItem = z.infer<typeof insertFinancialLineItemSchema>;
+export type BalanceSheetItem = typeof balanceSheetItems.$inferSelect;
+export type InsertBalanceSheetItem = z.infer<typeof insertBalanceSheetItemSchema>;
