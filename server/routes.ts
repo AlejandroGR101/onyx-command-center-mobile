@@ -95,6 +95,37 @@ export async function registerRoutes(
     res.json(items);
   });
 
+  // === FINANCIAL LINE ITEMS ===
+  app.get("/api/financials/line-items", async (req, res) => {
+    const period = String(req.query.period || "");
+    if (!period) {
+      return res.status(400).json({ error: "period requerido" });
+    }
+    if (!/^\d{4}-\d{2}$/.test(period)) {
+      return res.status(400).json({ error: "period inválido (formato YYYY-MM)" });
+    }
+    const items = await storage.getLineItemsByPeriod(period);
+
+    // Agrupar por category, sort por sortOrder, flip sign para COGS/OpEx.
+    const order = ["Revenue", "Cost of Goods Sold", "Operating Expenses"];
+    const grouped: Array<{ category: string; items: Array<{ label: string; amount: number }> }> = [];
+    for (const category of order) {
+      const matching = items
+        .filter((i) => i.category === category)
+        .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+      if (matching.length === 0) continue;
+      const isExpense = category !== "Revenue";
+      grouped.push({
+        category,
+        items: matching.map((i) => ({
+          label: i.label,
+          amount: isExpense ? -Math.abs(i.amount) : i.amount,
+        })),
+      });
+    }
+    res.json(grouped);
+  });
+
   // === DASHBOARD SUMMARY (aggregated) ===
   app.get("/api/dashboard-summary", async (_req, res) => {
     const jobs = await storage.getJobs();
