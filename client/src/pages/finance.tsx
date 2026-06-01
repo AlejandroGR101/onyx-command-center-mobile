@@ -49,97 +49,6 @@ const SHORT_LABELS: Record<string, string> = {
   "2026-03": "Mar",
 };
 
-/* ─── Monthly P&L line items (mock data per month) ─── */
-type PLItem = { label: string; amount: number };
-type PLSection = { category: string; items: PLItem[] };
-
-const MONTHLY_PL: Record<string, PLSection[]> = {
-  "2025-10": [
-    { category: "Revenue", items: [{ label: "Pressing Revenue", amount: 41200 }] },
-    { category: "Cost of Goods Sold", items: [
-      { label: "Vinyl Pellets", amount: -5900 }, { label: "Labels", amount: -3100 },
-      { label: "Jackets & Inserts", amount: -4200 }, { label: "Mastering / Cutting", amount: -3800 },
-      { label: "IC Labor (Pressing)", amount: -5400 }, { label: "Plating (RTI)", amount: -3900 },
-      { label: "Utilities", amount: -2100 }, { label: "Shipping Materials", amount: -1400 },
-    ]},
-    { category: "Operating Expenses", items: [
-      { label: "Rent", amount: -6150 }, { label: "Insurance", amount: -680 },
-      { label: "Software/Subscriptions", amount: -350 }, { label: "Professional Services", amount: -750 },
-      { label: "Other OpEx", amount: -2470 },
-    ]},
-  ],
-  "2025-11": [
-    { category: "Revenue", items: [{ label: "Pressing Revenue", amount: 38700 }] },
-    { category: "Cost of Goods Sold", items: [
-      { label: "Vinyl Pellets", amount: -5200 }, { label: "Labels", amount: -2800 },
-      { label: "Jackets & Inserts", amount: -3600 }, { label: "Mastering / Cutting", amount: -3500 },
-      { label: "IC Labor (Pressing)", amount: -5200 }, { label: "Plating (RTI)", amount: -4200 },
-      { label: "Utilities", amount: -2200 }, { label: "Shipping Materials", amount: -1400 },
-    ]},
-    { category: "Operating Expenses", items: [
-      { label: "Rent", amount: -6150 }, { label: "Insurance", amount: -680 },
-      { label: "Software/Subscriptions", amount: -350 }, { label: "Professional Services", amount: -750 },
-      { label: "Other OpEx", amount: -3870 },
-    ]},
-  ],
-  "2025-12": [
-    { category: "Revenue", items: [{ label: "Pressing Revenue", amount: 44100 }] },
-    { category: "Cost of Goods Sold", items: [
-      { label: "Vinyl Pellets", amount: -6100 }, { label: "Labels", amount: -3200 },
-      { label: "Jackets & Inserts", amount: -4500 }, { label: "Mastering / Cutting", amount: -4000 },
-      { label: "IC Labor (Pressing)", amount: -5800 }, { label: "Plating (RTI)", amount: -4200 },
-      { label: "Utilities", amount: -2000 }, { label: "Shipping Materials", amount: -1400 },
-    ]},
-    { category: "Operating Expenses", items: [
-      { label: "Rent", amount: -6150 }, { label: "Insurance", amount: -680 },
-      { label: "Software/Subscriptions", amount: -350 }, { label: "Professional Services", amount: -750 },
-      { label: "Other OpEx", amount: -4170 },
-    ]},
-  ],
-  "2026-01": [
-    { category: "Revenue", items: [{ label: "Pressing Revenue", amount: 32659 }] },
-    { category: "Cost of Goods Sold", items: [
-      { label: "Vinyl Pellets", amount: -4822 }, { label: "Labels", amount: -2393 },
-      { label: "Jackets & Inserts", amount: -3200 }, { label: "Mastering / Cutting", amount: -3239 },
-      { label: "IC Labor (Pressing)", amount: -5099 }, { label: "Plating (RTI)", amount: -4800 },
-      { label: "Utilities", amount: -3847 }, { label: "Shipping Materials", amount: -1252 },
-      { label: "Other COGS", amount: -3000 },
-    ]},
-    { category: "Operating Expenses", items: [
-      { label: "Rent", amount: -6150 }, { label: "Insurance", amount: -680 },
-      { label: "Software/Subscriptions", amount: -350 }, { label: "Professional Services", amount: -750 },
-      { label: "Other OpEx", amount: -500 },
-    ]},
-  ],
-  "2026-02": [
-    { category: "Revenue", items: [{ label: "Pressing Revenue", amount: 28400 }] },
-    { category: "Cost of Goods Sold", items: [
-      { label: "Vinyl Pellets", amount: -4200 }, { label: "Labels", amount: -2100 },
-      { label: "Jackets & Inserts", amount: -3000 }, { label: "Mastering / Cutting", amount: -3000 },
-      { label: "IC Labor (Pressing)", amount: -4800 }, { label: "Plating (RTI)", amount: -4100 },
-      { label: "Utilities", amount: -2200 }, { label: "Shipping Materials", amount: -1400 },
-    ]},
-    { category: "Operating Expenses", items: [
-      { label: "Rent", amount: -6150 }, { label: "Insurance", amount: -680 },
-      { label: "Software/Subscriptions", amount: -350 }, { label: "Professional Services", amount: -750 },
-      { label: "Other OpEx", amount: -270 },
-    ]},
-  ],
-  "2026-03": [
-    { category: "Revenue", items: [{ label: "Pressing Revenue", amount: 10528 }] },
-    { category: "Cost of Goods Sold", items: [
-      { label: "Vinyl Pellets", amount: -1800 }, { label: "Labels", amount: -800 },
-      { label: "Jackets & Inserts", amount: -1200 }, { label: "Mastering / Cutting", amount: -1100 },
-      { label: "IC Labor (Pressing)", amount: -1500 }, { label: "Plating (RTI)", amount: -900 },
-      { label: "Utilities", amount: -600 }, { label: "Shipping Materials", amount: -300 },
-    ]},
-    { category: "Operating Expenses", items: [
-      { label: "Rent", amount: -6150 }, { label: "Insurance", amount: -680 },
-      { label: "Software/Subscriptions", amount: -350 }, { label: "Professional Services", amount: -750 },
-      { label: "Other OpEx", amount: -170 },
-    ]},
-  ],
-};
 
 /* ─── Balance Sheet (from real QuickBooks January 2026) ─── */
 type BSLine = { label: string; amount: number; indent?: number; bold?: boolean };
@@ -363,15 +272,24 @@ export default function Finance() {
     queryKey: ["/api/jobs"],
     queryFn: async () => { const res = await apiRequest("GET", "/api/jobs"); return res.json(); },
   });
+  const pnlQuery = useQuery<Array<{ category: string; items: Array<{ label: string; amount: number }> }>>({
+    queryKey: ["/api/financials/line-items", selectedMonth],
+    queryFn: async () => {
+      const res = await apiRequest("GET", `/api/financials/line-items?period=${encodeURIComponent(selectedMonth)}`);
+      return res.json();
+    },
+  });
 
   const monthIdx = MONTHS.indexOf(selectedMonth);
   const canPrev = monthIdx > 0;
   const canNext = monthIdx < MONTHS.length - 1;
 
-  const pnlSections = MONTHLY_PL[selectedMonth] || MONTHLY_PL["2026-01"];
-  const revenue = pnlSections[0].items.reduce((s, i) => s + i.amount, 0);
-  const totalCOGS = pnlSections[1].items.reduce((s, i) => s + i.amount, 0);
-  const totalOpEx = pnlSections[2].items.reduce((s, i) => s + i.amount, 0);
+  const pnlSections = pnlQuery.data ?? [];
+  const sumSection = (name: string) =>
+    (pnlSections.find((s) => s.category === name)?.items ?? []).reduce((s, i) => s + i.amount, 0);
+  const revenue = sumSection("Revenue");
+  const totalCOGS = sumSection("Cost of Goods Sold");
+  const totalOpEx = sumSection("Operating Expenses");
   const grossProfit = revenue + totalCOGS;
   const netIncome = grossProfit + totalOpEx;
   const grossMargin = revenue > 0 ? (grossProfit / revenue * 100) : 0;
@@ -538,28 +456,37 @@ export default function Finance() {
               Monthly P&L — {MONTH_LABELS[selectedMonth]}
             </h2>
             <div className="space-y-1">
-              {pnlSections.map((section) => (
-                <div key={section.category}>
-                  <div className="text-[11px] font-medium tracking-[0.1em] uppercase text-white/30 mt-3 mb-1">
-                    {section.category}
-                  </div>
-                  {section.items.map((item) => (
-                    <div
-                      key={item.label}
-                      className="flex items-center justify-between py-1.5 px-2 rounded hover:bg-white/[0.02] text-xs"
-                    >
-                      <span className="text-white/60">{item.label}</span>
-                      <span
-                        className={`font-mono tabular-nums ${item.amount >= 0 ? "text-white/80" : "text-[#ff9100]/80"}`}
-                      >
-                        {item.amount >= 0 ? "" : "("}
-                        {fmt(item.amount)}
-                        {item.amount >= 0 ? "" : ")"}
-                      </span>
-                    </div>
-                  ))}
+              {pnlQuery.isLoading ? (
+                <div className="text-white/40 text-sm py-6">Cargando…</div>
+              ) : pnlSections.length === 0 ? (
+                <div className="rounded-xl border border-white/[0.08] bg-white/[0.04] p-6 text-center">
+                  <div className="text-white/60 text-sm">No hay desglose de P&amp;L para {selectedMonth}.</div>
+                  <div className="text-white/40 text-xs mt-1">Sincroniza QuickBooks para ver el detalle.</div>
                 </div>
-              ))}
+              ) : (
+                pnlSections.map((section) => (
+                  <div key={section.category}>
+                    <div className="text-[11px] font-medium tracking-[0.1em] uppercase text-white/30 mt-3 mb-1">
+                      {section.category}
+                    </div>
+                    {section.items.map((item) => (
+                      <div
+                        key={item.label}
+                        className="flex items-center justify-between py-1.5 px-2 rounded hover:bg-white/[0.02] text-xs"
+                      >
+                        <span className="text-white/60">{item.label}</span>
+                        <span
+                          className={`font-mono tabular-nums ${item.amount >= 0 ? "text-white/80" : "text-[#ff9100]/80"}`}
+                        >
+                          {item.amount >= 0 ? "" : "("}
+                          {fmt(item.amount)}
+                          {item.amount >= 0 ? "" : ")"}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ))
+              )}
               <div className="border-t border-white/[0.08] mt-3 pt-2">
                 <div className="flex items-center justify-between py-1.5 px-2 text-xs">
                   <span className="font-medium text-white/70">Gross Profit</span>
