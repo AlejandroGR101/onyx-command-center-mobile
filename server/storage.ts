@@ -12,13 +12,14 @@ import type {
   PressLog, InsertPressLog,
   User, InsertUser,
   QuickbooksToken, InsertQuickbooksToken,
+  FinancialLineItem, InsertFinancialLineItem,
 } from "@shared/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, inArray, asc } from "drizzle-orm";
 import { db } from "./db";
 import {
   jobs, productionRuns, financials, maintenanceTasks, sensorReadings,
   inventory, arAging, shipments, leads, vendors, pressLogs, users,
-  quickbooksTokens,
+  quickbooksTokens, financialLineItems,
 } from "@shared/schema";
 
 export interface IStorage {
@@ -85,6 +86,10 @@ export interface IStorage {
 
   // Financials — upsert parcial (solo columnas P&L)
   upsertFinancialPartial(period: string, partial: { revenue: number; cogs: number; operatingExpenses: number; netIncome: number; }): Promise<void>;
+
+  // Financial line items
+  getLineItemsByPeriod(period: string): Promise<FinancialLineItem[]>;
+  replaceLineItemsForPeriods(periods: string[], rows: InsertFinancialLineItem[]): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -101,6 +106,7 @@ export class MemStorage implements IStorage {
   private pressLogsMap: Map<number, PressLog> = new Map();
   private usersMap: Map<number, User> = new Map();
   private qbTokens: QuickbooksToken | undefined;
+  private lineItemsMap: Map<number, FinancialLineItem> = new Map();
   private nextId = 1;
 
   constructor() {
@@ -1296,6 +1302,24 @@ export class MemStorage implements IStorage {
       } as any);
     }
   }
+
+  async getLineItemsByPeriod(period: string): Promise<FinancialLineItem[]> {
+    return Array.from(this.lineItemsMap.values())
+      .filter((r) => r.period === period)
+      .sort((a, b) => {
+        const c = a.category.localeCompare(b.category);
+        return c !== 0 ? c : (a.sortOrder ?? 0) - (b.sortOrder ?? 0);
+      });
+  }
+  async replaceLineItemsForPeriods(periods: string[], rows: InsertFinancialLineItem[]): Promise<void> {
+    for (const [id, row] of Array.from(this.lineItemsMap.entries())) {
+      if (periods.includes(row.period)) this.lineItemsMap.delete(id);
+    }
+    for (const r of rows) {
+      const id = this.getNextId();
+      this.lineItemsMap.set(id, { ...(r as any), id, createdAt: new Date() } as FinancialLineItem);
+    }
+  }
 }
 
 export class DrizzleStorage implements IStorage {
@@ -1494,6 +1518,23 @@ export class DrizzleStorage implements IStorage {
           netIncome: partial.netIncome,
         },
       });
+  }
+
+  // Financial line items
+  async getLineItemsByPeriod(period: string): Promise<FinancialLineItem[]> {
+    return db
+      .select()
+      .from(financialLineItems)
+      .where(eq(financialLineItems.period, period))
+      .orderBy(asc(financialLineItems.category), asc(financialLineItems.sortOrder));
+  }
+  async replaceLineItemsForPeriods(periods: string[], rows: InsertFinancialLineItem[]): Promise<void> {
+    if (periods.length > 0) {
+      await db.delete(financialLineItems).where(inArray(financialLineItems.period, periods));
+    }
+    if (rows.length > 0) {
+      await db.insert(financialLineItems).values(rows);
+    }
   }
 }
 
