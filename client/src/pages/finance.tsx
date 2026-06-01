@@ -245,6 +245,7 @@ export default function Finance() {
       });
       qc.invalidateQueries({ queryKey: ["/api/qb/status"] });
       qc.invalidateQueries({ queryKey: ["/api/financials"] });
+      qc.invalidateQueries({ queryKey: ["/api/financials/line-items"] });
     } catch (err: any) {
       let msg = err?.message || "No se pudo sincronizar";
       const jsonStart = msg.indexOf("{");
