@@ -1,6 +1,16 @@
 import cron from "node-cron";
 import { ensureValidAccessToken } from "./oauth";
-import { parseProfitAndLossReport, parseProfitAndLossLineItems, type ParsedFinancial } from "./parse";
+import {
+  parseProfitAndLossReport,
+  parseProfitAndLossLineItems,
+  parseBalanceSheet,
+  parseAgedReceivables,
+  extractCashPosition,
+  extractApTotal,
+  extractArTotal,
+  type ParsedFinancial,
+} from "./parse";
+import type { InsertArAgingItem, InsertBalanceSheetItem } from "@shared/schema";
 import { storage } from "../storage";
 
 export interface SyncResult {
@@ -81,6 +91,110 @@ export async function syncProfitAndLoss(months = 12): Promise<SyncResult> {
   };
 }
 
+export interface BSSyncResult {
+  periods: string[];
+  updated: number;
+}
+
+export async function syncBalanceSheet(months = 12): Promise<BSSyncResult> {
+  const { accessToken, realmId, environment } = await ensureValidAccessToken();
+  const { startDate, endDate } = rangeLastNMonths(months);
+  const url = `${apiBase(environment)}/v3/company/${realmId}/reports/BalanceSheet?start_date=${startDate}&end_date=${endDate}&summarize_column_by=Month&accounting_method=Accrual&minorversion=70`;
+
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${accessToken}`, Accept: "application/json" },
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`QB BS API ${res.status}: ${body.slice(0, 500)}`);
+  }
+  const json = await res.json();
+  const parsed = parseBalanceSheet(json);
+  if (parsed.length === 0) {
+    throw new Error("BS report sin estructura esperada (Assets/Liabilities/Equity)");
+  }
+
+  const periods = Array.from(new Set(parsed.map((p) => p.period)));
+  const rowsForReplace: InsertBalanceSheetItem[] = parsed.map((p) => ({
+    period: p.period,
+    section: p.section,
+    label: p.label,
+    amount: p.amount,
+    indent: p.indent,
+    isBold: p.isBold,
+    sortOrder: p.sortOrder,
+  }));
+  await storage.replaceBalanceSheetForPeriods(periods, rowsForReplace);
+
+  // Side-effects: actualizar financials cashPosition / apTotal por period.
+  for (const period of periods) {
+    const cash = extractCashPosition(parsed, period);
+    const ap = extractApTotal(parsed, period);
+    const partial: { cashPosition?: number; apTotal?: number } = {};
+    if (cash !== null) partial.cashPosition = cash;
+    if (ap !== null) partial.apTotal = ap;
+    if (Object.keys(partial).length > 0) {
+      await storage.updateFinancialMetrics(period, partial);
+    }
+  }
+
+  return { periods, updated: parsed.length };
+}
+
+export interface ArSyncResult {
+  count: number;
+  arTotal: number;
+}
+
+function currentPeriod(): string {
+  const d = new Date();
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
+}
+
+export async function syncArAging(): Promise<ArSyncResult> {
+  const { accessToken, realmId, environment } = await ensureValidAccessToken();
+  const today = fmtDate(new Date());
+  const url = `${apiBase(environment)}/v3/company/${realmId}/reports/AgedReceivables?report_date=${today}&num_periods=4&aging_method=Current&minorversion=70`;
+
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${accessToken}`, Accept: "application/json" },
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`QB AR API ${res.status}: ${body.slice(0, 500)}`);
+  }
+  const json = await res.json();
+  const parsed = parseAgedReceivables(json);
+
+  const rowsForReplace: InsertArAgingItem[] = parsed.map((r) => ({
+    customerName: r.customerName,
+    amount: r.amount,
+    agingBucket: r.agingBucket,
+    invoiceDate: r.invoiceDate ?? null,
+    invoiceNumber: r.invoiceNumber ?? null,
+    notes: null,
+  }));
+  await storage.replaceArAging(rowsForReplace);
+
+  const total = extractArTotal(parsed);
+  await storage.updateFinancialMetrics(currentPeriod(), { arTotal: total });
+
+  return { count: parsed.length, arTotal: total };
+}
+
+export interface SyncAllResult {
+  pl: SyncResult;
+  bs: BSSyncResult;
+  ar: ArSyncResult;
+}
+
+export async function syncAll(months = 12): Promise<SyncAllResult> {
+  const pl = await syncProfitAndLoss(months);
+  const bs = await syncBalanceSheet(months);
+  const ar = await syncArAging();
+  return { pl, bs, ar };
+}
+
 export function registerQuickbooksSchedule(): void {
   const expr = process.env.QB_SYNC_CRON || "0 6 * * *";
   const tz = "America/Los_Angeles";
@@ -97,8 +211,8 @@ export function registerQuickbooksSchedule(): void {
           console.log("[quickbooks] schedule: QB no conectado, skip");
           return;
         }
-        const r = await syncProfitAndLoss(12);
-        console.log("[quickbooks] schedule sync OK:", JSON.stringify(r));
+        const r = await syncAll(12);
+        console.log("[quickbooks] schedule syncAll OK:", JSON.stringify({ pl: r.pl, bs: r.bs, ar: r.ar }));
       } catch (err) {
         console.error("[quickbooks] schedule sync falló:", err);
       }
