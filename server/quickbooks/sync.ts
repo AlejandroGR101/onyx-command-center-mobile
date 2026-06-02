@@ -5,12 +5,13 @@ import {
   parseProfitAndLossLineItems,
   parseBalanceSheet,
   parseAgedReceivables,
+  parseQbCustomers,
   extractCashPosition,
   extractApTotal,
   extractArTotal,
   type ParsedFinancial,
 } from "./parse";
-import type { InsertArAgingItem, InsertBalanceSheetItem } from "@shared/schema";
+import type { InsertArAgingItem, InsertBalanceSheetItem, InsertQbCustomer } from "@shared/schema";
 import { storage } from "../storage";
 
 export interface SyncResult {
@@ -182,17 +183,51 @@ export async function syncArAging(): Promise<ArSyncResult> {
   return { count: parsed.length, arTotal: total };
 }
 
+export interface CustomersSyncResult {
+  customers: number;
+  autoMatched: number;
+  ambiguous: number;
+}
+
+export async function syncQbCustomers(): Promise<CustomersSyncResult> {
+  const { accessToken, realmId, environment } = await ensureValidAccessToken();
+  const sql = encodeURIComponent("SELECT Id, DisplayName, Active FROM Customer MAXRESULTS 1000");
+  const url = `${apiBase(environment)}/v3/company/${realmId}/query?query=${sql}&minorversion=70`;
+
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${accessToken}`, Accept: "application/json" },
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`QB Customers API ${res.status}: ${body.slice(0, 500)}`);
+  }
+  const json = await res.json();
+  const parsed = parseQbCustomers(json);
+
+  const rowsForReplace: InsertQbCustomer[] = parsed.map((c) => ({
+    id: c.id,
+    displayName: c.displayName,
+    active: c.active,
+  }));
+  await storage.replaceQbCustomers(rowsForReplace);
+
+  const { matched, ambiguous } = await storage.autoMatchJobsToCustomers();
+  return { customers: parsed.length, autoMatched: matched, ambiguous };
+}
+
 export interface SyncAllResult {
   pl: SyncResult;
   bs: BSSyncResult;
   ar: ArSyncResult;
+  customers: CustomersSyncResult;
 }
 
 export async function syncAll(months = 12): Promise<SyncAllResult> {
   const pl = await syncProfitAndLoss(months);
   const bs = await syncBalanceSheet(months);
   const ar = await syncArAging();
-  return { pl, bs, ar };
+  const customers = await syncQbCustomers();
+  return { pl, bs, ar, customers };
 }
 
 export function registerQuickbooksSchedule(): void {
