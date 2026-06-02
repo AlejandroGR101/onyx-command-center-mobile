@@ -158,6 +158,9 @@ export default function Finance() {
   const qc = useQueryClient();
   const { toast } = useToast();
   const [syncingQb, setSyncingQb] = useState(false);
+  const [showOnlyUnmatched, setShowOnlyUnmatched] = useState(true);
+  const [savingMap, setSavingMap] = useState<Set<number>>(new Set());
+  const [pendingMap, setPendingMap] = useState<Record<number, string>>({});
   const qbStatus = useQuery<{ connected: boolean; realmId?: string; environment?: string; lastSyncAt?: string | null }>({
     queryKey: ["/api/qb/status"],
   });
@@ -170,15 +173,19 @@ export default function Finance() {
       const plMonths = data?.pl?.updated ?? 0;
       const bsRows = data?.bs?.updated ?? 0;
       const arRows = data?.ar?.count ?? 0;
+      const custCount = data?.customers?.customers ?? 0;
+      const autoMatched = data?.customers?.autoMatched ?? 0;
       toast({
         title: "QuickBooks sync OK",
-        description: `${plMonths} meses P&L · ${bsRows} líneas BS · ${arRows} AR rows`,
+        description: `${plMonths} meses P&L · ${bsRows} líneas BS · ${arRows} AR · ${custCount} customers (${autoMatched} matched)`,
       });
       qc.invalidateQueries({ queryKey: ["/api/qb/status"] });
       qc.invalidateQueries({ queryKey: ["/api/financials"] });
       qc.invalidateQueries({ queryKey: ["/api/financials/line-items"] });
       qc.invalidateQueries({ queryKey: ["/api/financials/balance-sheet"] });
       qc.invalidateQueries({ queryKey: ["/api/ar-aging"] });
+      qc.invalidateQueries({ queryKey: ["/api/qb/customers"] });
+      qc.invalidateQueries({ queryKey: ["/api/jobs"] });
     } catch (err: any) {
       let msg = err?.message || "No se pudo sincronizar";
       const jsonStart = msg.indexOf("{");
@@ -194,6 +201,35 @@ export default function Finance() {
     }
   }
 
+  async function handleSaveJobCustomer(jobId: number) {
+    const value = pendingMap[jobId];
+    const qbCustomerId = value === "" ? null : value;
+    setSavingMap((prev) => new Set(prev).add(jobId));
+    try {
+      const res = await apiRequest("PATCH", `/api/jobs/${jobId}`, { qbCustomerId });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      toast({ title: "Match guardado", description: `Job #${jobId} actualizado` });
+      qc.invalidateQueries({ queryKey: ["/api/jobs"] });
+      setPendingMap((prev) => {
+        const next = { ...prev };
+        delete next[jobId];
+        return next;
+      });
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err?.message || "No se pudo guardar",
+        variant: "destructive",
+      });
+    } finally {
+      setSavingMap((prev) => {
+        const next = new Set(prev);
+        next.delete(jobId);
+        return next;
+      });
+    }
+  }
+
   const { data: financials = [] } = useQuery({
     queryKey: ["/api/financials"],
     queryFn: async () => { const res = await apiRequest("GET", "/api/financials"); return res.json(); },
@@ -205,6 +241,13 @@ export default function Finance() {
   const { data: jobs = [] } = useQuery({
     queryKey: ["/api/jobs"],
     queryFn: async () => { const res = await apiRequest("GET", "/api/jobs"); return res.json(); },
+  });
+  const customersQuery = useQuery<Array<{ id: string; displayName: string; active: boolean }>>({
+    queryKey: ["/api/qb/customers"],
+    queryFn: async () => {
+      const res = await apiRequest("GET", "/api/qb/customers");
+      return res.json();
+    },
   });
   const pnlQuery = useQuery<Array<{ category: string; items: Array<{ label: string; amount: number }> }>>({
     queryKey: ["/api/financials/line-items", selectedMonth],
@@ -297,6 +340,69 @@ export default function Finance() {
               >
                 Connect QuickBooks
               </a>
+            )}
+          </div>
+        </div>
+        {/* QuickBooks Customer Mapping panel */}
+        <div
+          data-testid="qb-customer-mapping"
+          className="rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 py-3 mb-4"
+        >
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-3 text-xs">
+              <span className="uppercase tracking-[0.12em] text-white/40">Customer Mapping</span>
+              <span className="text-white/40">
+                {customersQuery.data?.length ?? 0} customers · {(jobs as any[]).filter((j: any) => !j.qbCustomerId).length} unmatched
+              </span>
+            </div>
+            <label className="flex items-center gap-2 text-[10px] text-white/50 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={showOnlyUnmatched}
+                onChange={(e) => setShowOnlyUnmatched(e.target.checked)}
+              />
+              Solo unmatched
+            </label>
+          </div>
+          <div className="space-y-1 max-h-64 overflow-y-auto">
+            {(jobs as any[])
+              .filter((j) => (showOnlyUnmatched ? !j.qbCustomerId : true))
+              .map((job: any) => {
+                const currentValue = pendingMap[job.id] ?? job.qbCustomerId ?? "";
+                const isSaving = savingMap.has(job.id);
+                const isDirty = pendingMap[job.id] !== undefined && pendingMap[job.id] !== (job.qbCustomerId ?? "");
+                return (
+                  <div
+                    key={job.id}
+                    className="flex items-center gap-2 text-xs py-1 px-2 rounded hover:bg-white/[0.02]"
+                  >
+                    <span className="font-mono text-white/40 w-8">#{job.id}</span>
+                    <span className="text-white/70 flex-1 truncate">{job.clientName}</span>
+                    <select
+                      value={currentValue}
+                      onChange={(e) => setPendingMap((p) => ({ ...p, [job.id]: e.target.value }))}
+                      className="bg-white/[0.06] border border-white/[0.1] rounded px-2 py-1 text-xs text-white/85 min-w-[180px]"
+                    >
+                      <option value="">— sin asignar —</option>
+                      {(customersQuery.data ?? []).map((c) => (
+                        <option key={c.id} value={c.id}>{c.displayName}</option>
+                      ))}
+                    </select>
+                    <button
+                      data-testid={`qb-map-save-${job.id}`}
+                      onClick={() => handleSaveJobCustomer(job.id)}
+                      disabled={isSaving || !isDirty}
+                      className="rounded px-2 py-1 text-[10px] font-medium text-white/85 border border-white/[0.1] bg-white/[0.06] hover:bg-white/[0.1] transition-colors disabled:opacity-40"
+                    >
+                      {isSaving ? "…" : "Guardar"}
+                    </button>
+                  </div>
+                );
+              })}
+            {(jobs as any[]).filter((j) => (showOnlyUnmatched ? !j.qbCustomerId : true)).length === 0 && (
+              <div className="text-white/40 text-xs py-4 text-center">
+                {showOnlyUnmatched ? "Todos los jobs tienen customer asignado." : "Sin jobs."}
+              </div>
             )}
           </div>
         </div>
