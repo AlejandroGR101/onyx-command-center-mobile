@@ -275,6 +275,11 @@ export async function registerRoutes(
   });
 
   // === QUICKBOOKS ===
+  app.get("/api/qb/customers", async (_req, res) => {
+    const customers = await storage.getQbCustomers();
+    res.json(customers);
+  });
+
   app.get("/api/qb/status", async (_req, res) => {
     res.json(await getQbStatus());
   });
