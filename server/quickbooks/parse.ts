@@ -376,3 +376,21 @@ export function parseAgedReceivables(json: AnyRow): ParsedArRow[] {
 export function extractArTotal(rows: ParsedArRow[]): number {
   return rows.reduce((s, r) => s + r.amount, 0);
 }
+
+export interface ParsedQbCustomer {
+  id: string;
+  displayName: string;
+  active: boolean;
+}
+
+export function parseQbCustomers(json: AnyRow): ParsedQbCustomer[] {
+  const customers = json?.QueryResponse?.Customer;
+  if (!Array.isArray(customers)) return [];
+  return customers
+    .filter((c) => c?.Id != null && c?.DisplayName)
+    .map((c) => ({
+      id: String(c.Id),
+      displayName: String(c.DisplayName),
+      active: c.Active !== false,
+    }));
+}
