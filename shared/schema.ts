@@ -25,6 +25,7 @@ export const jobs = pgTable("jobs", {
   regrindRatio: text("regrind_ratio"), // 0%, 25%, 50%, 75%
   operatorNotes: text("operator_notes"),
   specialInstructions: text("special_instructions"),
+  qbCustomerId: text("qb_customer_id"),
 });
 
 // Production Runs
@@ -334,6 +335,18 @@ export const insertBalanceSheetItemSchema = createInsertSchema(balanceSheetItems
   createdAt: true,
 });
 
+// QuickBooks Customers cache (jobs ↔ QB Customer mapping).
+export const qbCustomers = pgTable("qb_customers", {
+  id: text("id").primaryKey(),                  // QB Customer Id (string)
+  displayName: text("display_name").notNull(),
+  active: boolean("active").default(true),
+  syncedAt: timestamp("synced_at").defaultNow(),
+});
+
+export const insertQbCustomerSchema = createInsertSchema(qbCustomers).omit({
+  syncedAt: true,
+});
+
 export type Job = typeof jobs.$inferSelect;
 export type InsertJob = z.infer<typeof insertJobSchema>;
 export type ProductionRun = typeof productionRuns.$inferSelect;
@@ -364,3 +377,5 @@ export type FinancialLineItem = typeof financialLineItems.$inferSelect;
 export type InsertFinancialLineItem = z.infer<typeof insertFinancialLineItemSchema>;
 export type BalanceSheetItem = typeof balanceSheetItems.$inferSelect;
 export type InsertBalanceSheetItem = z.infer<typeof insertBalanceSheetItemSchema>;
+export type QbCustomer = typeof qbCustomers.$inferSelect;
+export type InsertQbCustomer = z.infer<typeof insertQbCustomerSchema>;
