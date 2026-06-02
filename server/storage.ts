@@ -14,13 +14,14 @@ import type {
   QuickbooksToken, InsertQuickbooksToken,
   FinancialLineItem, InsertFinancialLineItem,
   BalanceSheetItem, InsertBalanceSheetItem,
+  QbCustomer, InsertQbCustomer,
 } from "@shared/schema";
 import { eq, desc, inArray, asc } from "drizzle-orm";
 import { db } from "./db";
 import {
   jobs, productionRuns, financials, maintenanceTasks, sensorReadings,
   inventory, arAging, shipments, leads, vendors, pressLogs, users,
-  quickbooksTokens, financialLineItems, balanceSheetItems,
+  quickbooksTokens, financialLineItems, balanceSheetItems, qbCustomers,
 } from "@shared/schema";
 
 export interface IStorage {
@@ -101,6 +102,11 @@ export interface IStorage {
 
   // Financials metrics (cashPosition / arTotal / apTotal) — partial upsert
   updateFinancialMetrics(period: string, partial: { cashPosition?: number; arTotal?: number; apTotal?: number }): Promise<void>;
+
+  // QuickBooks Customers + jobs mapping
+  getQbCustomers(): Promise<QbCustomer[]>;
+  replaceQbCustomers(rows: InsertQbCustomer[]): Promise<void>;
+  autoMatchJobsToCustomers(): Promise<{ matched: number; ambiguous: number }>;
 }
 
 export class MemStorage implements IStorage {
@@ -119,6 +125,7 @@ export class MemStorage implements IStorage {
   private qbTokens: QuickbooksToken | undefined;
   private lineItemsMap: Map<number, FinancialLineItem> = new Map();
   private bsMap: Map<number, BalanceSheetItem> = new Map();
+  private qbCustomersMap: Map<string, QbCustomer> = new Map();
   private nextId = 1;
 
   constructor() {
@@ -1380,6 +1387,43 @@ export class MemStorage implements IStorage {
       } as any);
     }
   }
+
+  async getQbCustomers(): Promise<QbCustomer[]> {
+    return Array.from(this.qbCustomersMap.values()).sort((a, b) =>
+      a.displayName.localeCompare(b.displayName),
+    );
+  }
+  async replaceQbCustomers(rows: InsertQbCustomer[]): Promise<void> {
+    this.qbCustomersMap.clear();
+    for (const r of rows) {
+      this.qbCustomersMap.set(r.id, { ...(r as any), syncedAt: new Date() } as QbCustomer);
+    }
+  }
+  async autoMatchJobsToCustomers(): Promise<{ matched: number; ambiguous: number }> {
+    const normalize = (s: string) => s.toLowerCase().trim().replace(/\s+/g, " ");
+    const customers = Array.from(this.qbCustomersMap.values());
+    const byNorm = new Map<string, string[]>();
+    for (const c of customers) {
+      const k = normalize(c.displayName);
+      const arr = byNorm.get(k) ?? [];
+      arr.push(c.id);
+      byNorm.set(k, arr);
+    }
+    let matched = 0;
+    let ambiguous = 0;
+    for (const job of Array.from(this.jobs.values())) {
+      if (job.qbCustomerId) continue;
+      const candidates = byNorm.get(normalize(job.clientName)) ?? [];
+      if (candidates.length === 1) {
+        const updated = { ...job, qbCustomerId: candidates[0] } as typeof job;
+        this.jobs.set(job.id, updated);
+        matched++;
+      } else if (candidates.length > 1) {
+        ambiguous++;
+      }
+    }
+    return { matched, ambiguous };
+  }
 }
 
 export class DrizzleStorage implements IStorage {
@@ -1648,6 +1692,42 @@ export class DrizzleStorage implements IStorage {
         target: financials.period,
         set: setClause,
       });
+  }
+
+  // QuickBooks Customers
+  async getQbCustomers(): Promise<QbCustomer[]> {
+    return db.select().from(qbCustomers).orderBy(asc(qbCustomers.displayName));
+  }
+  async replaceQbCustomers(rows: InsertQbCustomer[]): Promise<void> {
+    await db.delete(qbCustomers);
+    if (rows.length > 0) {
+      await db.insert(qbCustomers).values(rows);
+    }
+  }
+  async autoMatchJobsToCustomers(): Promise<{ matched: number; ambiguous: number }> {
+    const normalize = (s: string) => s.toLowerCase().trim().replace(/\s+/g, " ");
+    const customers = await db.select().from(qbCustomers);
+    const byNorm = new Map<string, string[]>();
+    for (const c of customers) {
+      const k = normalize(c.displayName);
+      const arr = byNorm.get(k) ?? [];
+      arr.push(c.id);
+      byNorm.set(k, arr);
+    }
+    const allJobs = await db.select().from(jobs);
+    let matched = 0;
+    let ambiguous = 0;
+    for (const job of allJobs) {
+      if (job.qbCustomerId) continue; // respeta override existente
+      const candidates = byNorm.get(normalize(job.clientName)) ?? [];
+      if (candidates.length === 1) {
+        await db.update(jobs).set({ qbCustomerId: candidates[0] }).where(eq(jobs.id, job.id));
+        matched++;
+      } else if (candidates.length > 1) {
+        ambiguous++;
+      }
+    }
+    return { matched, ambiguous };
   }
 }
 
