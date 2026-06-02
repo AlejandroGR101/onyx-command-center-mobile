@@ -247,7 +247,7 @@ export function registerQuickbooksSchedule(): void {
           return;
         }
         const r = await syncAll(12);
-        console.log("[quickbooks] schedule syncAll OK:", JSON.stringify({ pl: r.pl, bs: r.bs, ar: r.ar }));
+        console.log("[quickbooks] schedule syncAll OK:", JSON.stringify({ pl: r.pl, bs: r.bs, ar: r.ar, customers: r.customers }));
       } catch (err) {
         console.error("[quickbooks] schedule sync falló:", err);
       }
