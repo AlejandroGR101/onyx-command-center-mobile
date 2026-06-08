@@ -1,4 +1,5 @@
 import "dotenv/config";
+import "./env"; // valida process.env al boot (fail-fast); debe ir antes de cualquier módulo que lo lea
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
