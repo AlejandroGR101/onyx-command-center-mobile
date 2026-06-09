@@ -85,16 +85,18 @@ export async function exchangeCode(callbackUrl: string, realmId: string): Promis
   });
 }
 
-// Devuelve un access_token válido. Si está por expirar (<5 min), refresca y persiste.
-export async function ensureValidAccessToken(): Promise<{ accessToken: string; realmId: string; environment: string }> {
+// In-process mutex para serializar refresh calls.
+// Si 2+ requests llegan con token vencido al mismo tiempo, comparten una sola
+// llamada a Intuit refresh() — evita que Intuit invalide el refresh_token al
+// recibir dos refreshes paralelos con la misma credencial.
+// Limitación: solo cubre single-instance. Multi-instance requiere lock distribuido
+// (ej. pg_advisory_lock) — fuera de alcance actual.
+let refreshInFlight: Promise<{ accessToken: string; realmId: string; environment: string }> | null = null;
+
+async function doRefresh(): Promise<{ accessToken: string; realmId: string; environment: string }> {
   const t = await storage.getQbTokens();
   if (!t) throw new Error("QB no conectado");
   const now = Date.now();
-  const margin = 5 * 60 * 1000;
-  if (t.expiresAt.getTime() - now > margin) {
-    return { accessToken: t.accessToken, realmId: t.realmId, environment: t.environment };
-  }
-  // Refrescar.
   const client = newClient();
   client.setToken({
     access_token: t.accessToken,
@@ -109,7 +111,7 @@ export async function ensureValidAccessToken(): Promise<{ accessToken: string; r
     const r = await client.refresh();
     refreshed = r.getJson();
   } catch (err: any) {
-    // Refresh fallido (token expirado >100d, o revocado): borrar tokens.
+    // Refresh fallido (refresh_token expirado >100d, revocado, o ya usado).
     await storage.clearQbTokens();
     throw new Error("QB refresh falló — re-conectar requerido");
   }
@@ -123,6 +125,28 @@ export async function ensureValidAccessToken(): Promise<{ accessToken: string; r
     lastSyncAt: t.lastSyncAt ?? null,
   });
   return { accessToken: saved.accessToken, realmId: saved.realmId, environment: saved.environment };
+}
+
+// Devuelve un access_token válido. Si está por expirar (<5 min), refresca y persiste.
+// Concurrencia: si otro caller ya está refreshing, espera el mismo resultado en vez
+// de disparar un segundo refresh (race que Intuit rechazaría).
+export async function ensureValidAccessToken(): Promise<{ accessToken: string; realmId: string; environment: string }> {
+  const t = await storage.getQbTokens();
+  if (!t) throw new Error("QB no conectado");
+  const now = Date.now();
+  const margin = 5 * 60 * 1000;
+  if (t.expiresAt.getTime() - now > margin) {
+    return { accessToken: t.accessToken, realmId: t.realmId, environment: t.environment };
+  }
+
+  // Token vencido o por vencer: serializar el refresh.
+  if (refreshInFlight) {
+    return refreshInFlight;
+  }
+  refreshInFlight = doRefresh().finally(() => {
+    refreshInFlight = null;
+  });
+  return refreshInFlight;
 }
 
 export async function getStatus(): Promise<{
