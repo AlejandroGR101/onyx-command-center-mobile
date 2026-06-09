@@ -4,11 +4,23 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import bcrypt from "bcryptjs";
 import connectPgSimple from "connect-pg-simple";
+import rateLimit from "express-rate-limit";
 import { pool, db } from "./db";
 import { storage } from "./storage";
 import type { User } from "@shared/schema";
 import { users } from "@shared/schema";
 import { eq } from "drizzle-orm";
+
+// Anti brute-force en /api/auth/login: 5 intentos fallidos / 15 min por IP.
+// skipSuccessfulRequests=true → logins exitosos no cuentan; solo fallos.
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { error: "Demasiados intentos de login. Reintenta en 15 minutos." },
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: true,
+});
 
 // Passport: validar usuario vs bcrypt hash
 passport.use(
@@ -67,7 +79,7 @@ export function setupAuth(app: Express) {
   app.use(passport.session());
 
   // Endpoints de auth
-  app.post("/api/auth/login", (req, res, next) => {
+  app.post("/api/auth/login", loginLimiter, (req, res, next) => {
     passport.authenticate("local", (err: any, user: User | false) => {
       if (err) return next(err);
       if (!user) return res.status(401).json({ error: "Credenciales inválidas" });
