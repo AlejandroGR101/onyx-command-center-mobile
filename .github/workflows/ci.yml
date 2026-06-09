@@ -28,5 +28,8 @@ jobs:
       - name: Typecheck (tsc)
         run: npm run check
 
+      - name: Unit tests (vitest)
+        run: npm test
+
       - name: Build (vite + esbuild)
         run: npm run build
