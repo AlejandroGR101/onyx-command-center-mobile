@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { pool } from "./db";
 import { requireAuth } from "./auth";
 import { sendOverdueDigest } from "./notifications";
 import { isEmailConfigured } from "./email";
@@ -18,8 +19,29 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
 
+  // === HEALTH (público — sin auth) ===
+  // Para uptime monitoring. DB ping + uptime. 200 si DB responde, 503 si no.
+  app.get("/api/health", async (_req, res) => {
+    const t0 = Date.now();
+    let dbOk = false;
+    let dbErr: string | undefined;
+    try {
+      await pool.query("SELECT 1");
+      dbOk = true;
+    } catch (e: any) {
+      dbErr = e?.message ?? "db error";
+    }
+    res.status(dbOk ? 200 : 503).json({
+      status: dbOk ? "ok" : "degraded",
+      timestamp: new Date().toISOString(),
+      uptime: Math.round(process.uptime()),
+      db: { ok: dbOk, latencyMs: Date.now() - t0, ...(dbErr ? { error: dbErr } : {}) },
+    });
+  });
+
   // Proteger todas las rutas /api registradas a partir de aquí.
   // Los endpoints /api/auth/* se montan en setupAuth (antes de registerRoutes) y NO pasan por requireAuth.
+  // /api/health también queda público porque se registra ANTES de este middleware.
   app.use("/api", requireAuth);
 
   // === JOBS ===
