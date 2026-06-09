@@ -1,0 +1,14 @@
+dist
+node_modules
+migrations
+playwright-report*
+test-results
+.env
+.env.local
+.env.example
+attached_assets
+*.lock
+*.min.js
+*.min.css
+screenshot-*.png
+package-lock.json
