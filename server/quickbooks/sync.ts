@@ -13,6 +13,7 @@ import {
 } from "./parse";
 import type { InsertArAgingItem, InsertBalanceSheetItem, InsertQbCustomer } from "@shared/schema";
 import { storage } from "../storage";
+import { logger } from "../logger";
 
 export interface SyncResult {
   periods: string[];
@@ -234,7 +235,7 @@ export function registerQuickbooksSchedule(): void {
   const expr = process.env.QB_SYNC_CRON || "0 6 * * *";
   const tz = "America/Los_Angeles";
   if (!cron.validate(expr)) {
-    console.warn(`[quickbooks] QB_SYNC_CRON inválido: "${expr}" — schedule no registrado`);
+    logger.warn({ expr }, "[quickbooks] QB_SYNC_CRON inválido — schedule no registrado");
     return;
   }
   cron.schedule(
@@ -243,16 +244,19 @@ export function registerQuickbooksSchedule(): void {
       try {
         const tokens = await storage.getQbTokens();
         if (!tokens) {
-          console.log("[quickbooks] schedule: QB no conectado, skip");
+          logger.info("[quickbooks] schedule: QB no conectado, skip");
           return;
         }
         const r = await syncAll(12);
-        console.log("[quickbooks] schedule syncAll OK:", JSON.stringify({ pl: r.pl, bs: r.bs, ar: r.ar, customers: r.customers }));
+        logger.info(
+          { pl: r.pl, bs: r.bs, ar: r.ar, customers: r.customers },
+          "[quickbooks] schedule syncAll OK",
+        );
       } catch (err) {
-        console.error("[quickbooks] schedule sync falló:", err);
+        logger.error({ err }, "[quickbooks] schedule sync falló");
       }
     },
     { timezone: tz },
   );
-  console.log(`[quickbooks] schedule registrado: "${expr}" (${tz})`);
+  logger.info({ expr, tz }, "[quickbooks] schedule registrado");
 }

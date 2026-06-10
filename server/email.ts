@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { Resend } from "resend";
+import { logger } from "./logger";
 
 const apiKey = process.env.RESEND_API_KEY;
 const from = process.env.ALERT_FROM || "onboarding@resend.dev";
@@ -30,11 +31,11 @@ export interface SendEmailResult {
 
 export async function sendEmail({ to, subject, html }: SendEmailArgs): Promise<SendEmailResult> {
   if (!resend) {
-    console.warn("[email] RESEND_API_KEY no configurada — envío omitido");
+    logger.warn("[email] RESEND_API_KEY no configurada — envío omitido");
     return { skipped: true };
   }
   if (to.length === 0) {
-    console.warn("[email] sin destinatarios (ALERT_RECIPIENTS) — envío omitido");
+    logger.warn("[email] sin destinatarios (ALERT_RECIPIENTS) — envío omitido");
     return { skipped: true };
   }
   const { data, error } = await resend.emails.send({ from, to, subject, html });

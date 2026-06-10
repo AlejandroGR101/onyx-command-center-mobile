@@ -29,6 +29,8 @@ const allowlist = [
   "passport",
   "passport-local",
   "pg",
+  "pino",
+  "pino-pretty",
   "stripe",
   "uuid",
   "ws",

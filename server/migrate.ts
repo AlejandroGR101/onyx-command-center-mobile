@@ -14,10 +14,11 @@ import "./env";
 import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
+import { logger } from "./logger";
 
 async function main() {
   if (!process.env.DATABASE_URL) {
-    console.error("DATABASE_URL no definida");
+    logger.error("DATABASE_URL no definida");
     process.exit(1);
   }
   const pool = new Pool({
@@ -26,14 +27,14 @@ async function main() {
   });
   const db = drizzle(pool);
 
-  console.log("[migrate] aplicando migrations desde ./migrations ...");
+  logger.info("[migrate] aplicando migrations desde ./migrations ...");
   await migrate(db, { migrationsFolder: "./migrations" });
-  console.log("[migrate] OK");
+  logger.info("[migrate] OK");
 
   await pool.end();
 }
 
 main().catch((err) => {
-  console.error("[migrate] falló:", err);
+  logger.error({ err }, "[migrate] falló");
   process.exit(1);
 });

@@ -1,6 +1,7 @@
 import cron from "node-cron";
 import { storage } from "./storage";
 import { sendEmail, getRecipients, isEmailConfigured } from "./email";
+import { logger } from "./logger";
 import type { Lead, MaintenanceTask } from "@shared/schema";
 
 // Días hasta una fecha (mismo cálculo que client/src/pages/leads.tsx).
@@ -64,11 +65,13 @@ export function buildDigestHtml(leads: Lead[], tasks: MaintenanceTask[]): string
 
   if (tasks.length > 0) {
     const rows = tasks
-      .map((t) => `<tr>
+      .map(
+        (t) => `<tr>
         <td style="padding:6px 10px;border-bottom:1px solid #eee;">${esc(t.title)}</td>
         <td style="padding:6px 10px;border-bottom:1px solid #eee;">${esc(t.assignedTo) || "—"}</td>
         <td style="padding:6px 10px;border-bottom:1px solid #eee;">${esc(t.nextDue)}</td>
-      </tr>`)
+      </tr>`,
+      )
       .join("");
     sections.push(`
       <h2 style="font:600 16px sans-serif;color:#b00020;margin:20px 0 8px;">Mantenimiento vencido (${tasks.length})</h2>
@@ -121,17 +124,17 @@ export function registerNotificationSchedule(): void {
   const expr = process.env.ALERT_CRON || "0 8 * * *";
   const tz = process.env.ALERT_TZ || "America/Los_Angeles";
   if (!cron.validate(expr)) {
-    console.warn(`[notifications] ALERT_CRON inválido: "${expr}" — schedule no registrado`);
+    logger.warn({ expr }, "[notifications] ALERT_CRON inválido — schedule no registrado");
     return;
   }
   cron.schedule(
     expr,
     () => {
       sendOverdueDigest()
-        .then((s) => console.log("[notifications] digest:", JSON.stringify(s)))
-        .catch((err) => console.error("[notifications] digest falló:", err));
+        .then((s) => logger.info({ summary: s }, "[notifications] digest"))
+        .catch((err) => logger.error({ err }, "[notifications] digest falló"));
     },
     { timezone: tz },
   );
-  console.log(`[notifications] schedule registrado: "${expr}" (${tz})`);
+  logger.info({ expr, tz }, "[notifications] schedule registrado");
 }

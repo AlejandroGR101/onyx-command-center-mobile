@@ -1,5 +1,6 @@
 import "dotenv/config";
 import "./env"; // valida process.env al boot (fail-fast); debe ir antes de cualquier módulo que lo lea
+import { logger } from "./logger";
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
@@ -35,15 +36,10 @@ setupAuth(app);
 registerNotificationSchedule();
 registerQuickbooksSchedule();
 
+// Helper retained for compatibility (vite.ts/static.ts importan `log`).
+// Delega a pino con `source` como child binding.
 export function log(message: string, source = "express") {
-  const formattedTime = new Date().toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true,
-  });
-
-  console.log(`${formattedTime} [${source}] ${message}`);
+  logger.child({ source }).info(message);
 }
 
 app.use((req, res, next) => {
@@ -79,7 +75,7 @@ app.use((req, res, next) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
 
-    console.error("Internal Server Error:", err);
+    logger.error({ err }, "Internal Server Error");
 
     if (res.headersSent) {
       return next(err);
