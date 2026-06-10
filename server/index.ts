@@ -1,5 +1,6 @@
 import "dotenv/config";
 import "./env"; // valida process.env al boot (fail-fast); debe ir antes de cualquier módulo que lo lea
+import { Sentry, sentryEnabled } from "./sentry"; // instrumentation global — debe cargar antes que express
 import { logger } from "./logger";
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
@@ -70,6 +71,13 @@ app.use((req, res, next) => {
 
 (async () => {
   await registerRoutes(httpServer, app);
+
+  // Sentry Express error handler — DEBE ir antes de cualquier otro error handler.
+  // Captura las excepciones lanzadas por handlers / async routes y las reporta.
+  if (sentryEnabled) {
+    Sentry.setupExpressErrorHandler(app);
+    logger.info("[sentry] backend tracking habilitado");
+  }
 
   app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
     const status = err.status || err.statusCode || 500;

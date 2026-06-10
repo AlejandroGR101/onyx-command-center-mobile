@@ -31,6 +31,7 @@ const allowlist = [
   "pg",
   "pino",
   "pino-pretty",
+  "@sentry/node",
   "stripe",
   "uuid",
   "ws",

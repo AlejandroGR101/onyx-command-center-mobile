@@ -9,7 +9,10 @@ const envSchema = z.object({
   DATABASE_URL: z.string().min(1, "DATABASE_URL es requerido"),
   SESSION_SECRET: z
     .string()
-    .min(32, "SESSION_SECRET debe tener >= 32 caracteres (genera con: node -e \"console.log(require('crypto').randomBytes(48).toString('base64url'))\")"),
+    .min(
+      32,
+      "SESSION_SECRET debe tener >= 32 caracteres (genera con: node -e \"console.log(require('crypto').randomBytes(48).toString('base64url'))\")",
+    ),
 
   // Admin seed (defaults aceptables para dev local).
   ADMIN_USERNAME: z.string().min(1).optional().default("Admin"),
@@ -17,11 +20,7 @@ const envSchema = z.object({
 
   // === Runtime ===
   NODE_ENV: z.enum(["development", "production", "test"]).optional().default("development"),
-  PORT: z
-    .string()
-    .regex(/^\d+$/, "PORT debe ser numérico")
-    .optional()
-    .default("5000"),
+  PORT: z.string().regex(/^\d+$/, "PORT debe ser numérico").optional().default("5000"),
 
   // === Optional: Resend (alertas internas) ===
   RESEND_API_KEY: z.string().optional(),
@@ -29,6 +28,9 @@ const envSchema = z.object({
   ALERT_RECIPIENTS: z.string().optional(),
   ALERT_CRON: z.string().optional(),
   ALERT_TZ: z.string().optional(),
+
+  // === Optional: Sentry error tracking ===
+  SENTRY_DSN: z.string().url("SENTRY_DSN debe ser URL válida").optional(),
 
   // === Optional: QuickBooks Online ===
   QB_CLIENT_ID: z.string().optional(),
@@ -58,7 +60,9 @@ function validate(): Env {
   if (!e.RESEND_API_KEY) {
     console.warn("[env] RESEND_API_KEY no configurado — email digest deshabilitado.");
   } else if (!e.ALERT_RECIPIENTS) {
-    console.warn("[env] RESEND_API_KEY presente pero ALERT_RECIPIENTS vacío — sin destinatarios para el digest.");
+    console.warn(
+      "[env] RESEND_API_KEY presente pero ALERT_RECIPIENTS vacío — sin destinatarios para el digest.",
+    );
   }
 
   if (!e.QB_CLIENT_ID || !e.QB_CLIENT_SECRET) {
